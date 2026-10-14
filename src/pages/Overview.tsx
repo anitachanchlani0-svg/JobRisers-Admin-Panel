@@ -1,16 +1,37 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Activity, ArrowDownRight, ArrowUpRight, CheckCircle2, Clock3, ListFilter } from 'lucide-react';
 import { adminActivities, adminOverview, type AdminActivity } from '@/mock-data';
-import { EmptyState, EmptyInline } from '@/components/ui';
+import { EmptyState, EmptyInline, Modal } from '@/components/ui';
 
 const dashboardSections = ['Overview', 'Moderation queue summary', 'System health'];
 
 export function Overview() {
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(dashboardSections[0]);
   const data = adminOverview;
   
   // Generic Action Modal for Dashboard interactions
   const [actionModal, setActionModal] = useState<{ title: string; subtitle: string; actionText: string; tone: string } | null>(null);
+
+  const handleQueueClick = (label: string) => {
+    const normalized = label.toLowerCase();
+    if (normalized.includes('job')) {
+      navigate('/jobs');
+    } else if (normalized.includes('employer')) {
+      navigate('/employers');
+    } else if (normalized.includes('candidate')) {
+      navigate('/candidates');
+    } else if (normalized.includes('application')) {
+      navigate('/applications');
+    } else if (normalized.includes('safety') || normalized.includes('report')) {
+      navigate('/trust-safety');
+    } else if (normalized.includes('support') || normalized.includes('ticket')) {
+      navigate('/support');
+    } else {
+      setActionModal({ title: `Queue: ${label}`, subtitle: 'Detailed View', actionText: 'Open Queue', tone: 'primary' });
+    }
+  };
 
   if (!data) return <EmptyState title="No marketplace overview yet" detail="Metrics and review queues will appear here when available." />;
 
@@ -18,9 +39,9 @@ export function Overview() {
 
   return (
     <div className="space-y-5">
-      <div className="mt-5 flex gap-1 overflow-x-auto border-b border-border">
+      <div className="mt-5 flex gap-1 overflow-x-auto border-b border-border no-scrollbar">
         {dashboardSections.map((section) => (
-          <button key={section} onClick={() => setSelected(section)} aria-pressed={selected === section} className={`whitespace-nowrap border-b-2 px-3 py-2.5 text-[10px] font-semibold transition-colors ${selected === section ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>
+          <button key={section} onClick={() => setSelected(section)} aria-pressed={selected === section} className={`whitespace-nowrap border-b-2 px-3.5 py-2.5 text-[11px] font-bold transition-colors ${selected === section ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>
             {section}
           </button>
         ))}
@@ -46,10 +67,10 @@ export function Overview() {
                 </div>
               </div>
               <table className="w-full border-collapse text-left">
-                <thead><tr className="bg-[#faf9fd] text-[9px] font-bold tracking-[.11em] text-muted-foreground"><th>QUEUE ITEM</th><th>TYPE</th><th>SUBMITTED</th><th>RISK SCORE</th><th>ACTION</th></tr></thead>
+                <thead><tr className="bg-[#faf9fd] text-[9px] font-bold tracking-[.12em] text-muted-foreground uppercase"><th className="py-3 px-2">QUEUE ITEM</th><th className="py-3 px-2">TYPE</th><th className="py-3 px-2">SUBMITTED</th><th className="py-3 px-2">RISK SCORE</th><th className="py-3 px-2">ACTION</th></tr></thead>
                 <tbody className="divide-y divide-border/75">
-                  <tr className="hover:bg-[#fbfaff]"><td className="py-4 px-2 text-[12px] font-bold">Data Platform Engineer</td><td className="py-4 px-2 text-xs text-muted-foreground font-medium">Job Listing</td><td className="py-4 px-2 text-xs text-muted-foreground font-medium">2 hrs ago</td><td className="py-4 px-2 text-xs text-rose-600 font-bold">High (Suspicious Links)</td><td className="py-4 px-2"><button onClick={() => setActionModal({ title: 'Moderation Review', subtitle: 'Data Platform Engineer', actionText: 'Start Review', tone: 'primary' })} className="border border-border hover:border-primary hover:text-primary transition-colors text-[11px] font-bold px-3 py-1.5 rounded-lg">Review</button></td></tr>
-                  <tr className="hover:bg-[#fbfaff]"><td className="py-4 px-2 text-[12px] font-bold">Cloudframe Account</td><td className="py-4 px-2 text-xs text-muted-foreground font-medium">Employer Verification</td><td className="py-4 px-2 text-xs text-muted-foreground font-medium">3 hrs ago</td><td className="py-4 px-2 text-xs text-amber-600 font-bold">Medium</td><td className="py-4 px-2"><button onClick={() => setActionModal({ title: 'Moderation Review', subtitle: 'Cloudframe Account', actionText: 'Start Review', tone: 'primary' })} className="border border-border hover:border-primary hover:text-primary transition-colors text-[11px] font-bold px-3 py-1.5 rounded-lg">Review</button></td></tr>
+                  <tr className="hover:bg-[#fbfaff]"><td className="py-4 px-2 text-[12px] font-bold">Data Platform Engineer</td><td className="py-4 px-2 text-xs text-muted-foreground font-medium">Job Listing</td><td className="py-4 px-2 text-xs text-muted-foreground font-medium">2 hrs ago</td><td className="py-4 px-2 text-xs text-rose-600 font-bold">High (Suspicious Links)</td><td className="py-4 px-2"><button onClick={() => navigate('/jobs')} className="border border-border hover:border-primary hover:text-primary transition-colors text-[11px] font-bold px-3 py-1.5 rounded-lg">Review</button></td></tr>
+                  <tr className="hover:bg-[#fbfaff]"><td className="py-4 px-2 text-[12px] font-bold">Cloudframe Account</td><td className="py-4 px-2 text-xs text-muted-foreground font-medium">Employer Verification</td><td className="py-4 px-2 text-xs text-muted-foreground font-medium">3 hrs ago</td><td className="py-4 px-2 text-xs text-amber-600 font-bold">Medium</td><td className="py-4 px-2"><button onClick={() => navigate('/employers')} className="border border-border hover:border-primary hover:text-primary transition-colors text-[11px] font-bold px-3 py-1.5 rounded-lg">Review</button></td></tr>
                 </tbody>
               </table>
             </div>
@@ -85,15 +106,15 @@ export function Overview() {
         <>
           <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4 mt-5" aria-label="Marketplace metrics">
             {(data.metrics ?? []).map((metric, index) => (
-              <article key={metric.label} data-testid={`metric-card-${index}`} className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-[0_2px_12px_rgba(37,35,80,.025)] transition-transform duration-200 hover:-translate-y-0.5">
-                <div className="flex items-start justify-between">
-                  <p className="text-[11px] font-semibold text-muted-foreground">{metric.label}</p>
-                  <span className={`flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold ${metric.direction === 'up' ? 'bg-emerald-50 text-emerald-700' : metric.direction === 'down' ? 'bg-rose-50 text-rose-700' : 'bg-muted text-muted-foreground'}`}>
+              <article key={metric.label} data-testid={`metric-card-${index}`} className="relative overflow-hidden rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-[0_2px_12px_rgba(37,35,80,.025)] transition-transform duration-200 hover:-translate-y-0.5">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-[11px] font-semibold text-muted-foreground leading-tight line-clamp-2">{metric.label}</p>
+                  <span className={`shrink-0 flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold whitespace-nowrap ${metric.direction === 'up' ? 'bg-emerald-50 text-emerald-700' : metric.direction === 'down' ? 'bg-rose-50 text-rose-700' : 'bg-muted text-muted-foreground'}`}>
                     {metric.direction === 'up' ? <ArrowUpRight size={12} /> : metric.direction === 'down' ? <ArrowDownRight size={12} /> : null}{metric.change}
                   </span>
                 </div>
-                <div className="mt-4 font-display text-[29px] font-extrabold tracking-[-.04em]">{metric.value}</div>
-                <div className="mt-1 text-[10px] text-muted-foreground">Compared with previous period</div>
+                <div className="mt-3.5 sm:mt-4 font-display text-[26px] sm:text-[29px] font-extrabold tracking-[-.04em]">{metric.value}</div>
+                <div className="mt-1 text-[10px] text-muted-foreground truncate">Compared with previous period</div>
                 <div className={`absolute bottom-0 left-0 h-[2px] w-full ${index % 2 ? 'bg-[#dcd4f6]' : 'bg-primary/45'}`} />
               </article>
             ))}
@@ -106,15 +127,15 @@ export function Overview() {
                   <p className="mt-1 text-[11px] text-muted-foreground">New signups, job listings and applications</p>
                 </div>
               </div>
-              <div className="mt-7 flex h-[210px] items-end gap-2 border-b border-border pb-1 sm:gap-3">
+              <div className="mt-7 flex h-[210px] items-end justify-between gap-2 border-b border-border pb-1 sm:gap-4 lg:gap-6 max-w-4xl mx-auto w-full">
                 {(data.trend ?? []).slice(-7).map((point, index) => (
-                  <div key={`${point.label}-${index}`} className="group flex h-full min-w-0 flex-1 flex-col justify-end">
-                    <div className="mb-2 flex h-full items-end justify-center gap-[3px]">
+                  <div key={`${point.label}-${index}`} className="group flex h-full min-w-0 flex-1 flex-col justify-end items-center max-w-[80px]">
+                    <div className="mb-2 flex h-full items-end justify-center gap-1 sm:gap-1.5 w-full">
                       {[['signups', point.signups, 'bg-primary'], ['jobs', point.jobs, 'bg-[#a99adf]'], ['applications', point.applications, 'bg-[#95c9bd]']].map(([key, value, color]) => (
-                        <div key={String(key)} title={`${key}: ${value}`} className={`${color} w-full max-w-[13px] rounded-t-[3px] opacity-85 transition-opacity group-hover:opacity-100`} style={{ height: `${Math.max(3, Number(value) / maxTrend * 100)}%` }} />
+                        <div key={String(key)} title={`${key}: ${value}`} className={`${color} w-full max-w-[12px] sm:max-w-[16px] xl:max-w-[18px] rounded-t-[3px] opacity-85 transition-opacity group-hover:opacity-100`} style={{ height: `${Math.max(3, Number(value) / maxTrend * 100)}%` }} />
                       ))}
                     </div>
-                    <div className="truncate text-center text-[9px] text-muted-foreground">{point.label}</div>
+                    <div className="truncate text-center text-[9px] font-medium text-muted-foreground">{point.label}</div>
                   </div>
                 ))}
                 {!data.trend?.length && <div className="flex w-full items-center justify-center text-xs text-muted-foreground">No trend data for this period.</div>}
@@ -139,7 +160,7 @@ export function Overview() {
                 {(data.queues ?? []).map((queue) => {
                   const tone: Record<string, string> = { blue: 'bg-sky-100 text-sky-700', violet: 'bg-violet-100 text-violet-700', amber: 'bg-amber-100 text-amber-800', red: 'bg-rose-100 text-rose-700', green: 'bg-emerald-100 text-emerald-700' };
                   return (
-                    <div key={queue.label} className="flex items-center gap-3 py-3.5 cursor-pointer hover:bg-muted/30 transition-colors px-2 -mx-2 rounded-lg" onClick={() => setActionModal({ title: `Queue: ${queue.label}`, subtitle: 'Detailed View', actionText: 'Open Queue', tone: 'primary' })}>
+                    <div key={queue.label} className="flex items-center gap-3 py-3.5 cursor-pointer hover:bg-muted/30 transition-colors px-2 -mx-2 rounded-lg" onClick={() => handleQueueClick(queue.label)}>
                       <span className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-1.5 font-mono-ui text-[11px] font-semibold ${tone[queue.tone] ?? tone.violet}`}>{queue.count}</span>
                       <div className="min-w-0 flex-1">
                         <div className="text-[12px] font-semibold">{queue.label}</div>
@@ -157,24 +178,35 @@ export function Overview() {
         </>
       )}
 
-      {actionModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setActionModal(null); }}>
-          <div role="dialog" aria-modal="true" className="w-full max-w-[400px] rounded-2xl border border-border bg-card p-6 shadow-2xl">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="font-display text-xl font-extrabold tracking-tight">{actionModal.title}</h2>
-                <p className="mt-1 text-[12px] text-muted-foreground">{actionModal.subtitle}</p>
-              </div>
-            </div>
-            <div className="mt-6 flex justify-end gap-3">
-              <button onClick={() => setActionModal(null)} className="rounded-xl border border-border px-4 py-2.5 text-[11px] font-bold hover:bg-muted transition-colors">Cancel</button>
-              <button onClick={() => setActionModal(null)} className={`rounded-xl px-4 py-2.5 text-[11px] font-bold text-white transition hover:opacity-90 ${actionModal.tone === 'rose' ? 'bg-rose-600' : actionModal.tone === 'green' ? 'bg-emerald-600' : 'bg-primary'}`}>
-                {actionModal.actionText}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={Boolean(actionModal)}
+        onClose={() => setActionModal(null)}
+        title={actionModal?.title}
+        subtitle={actionModal?.subtitle}
+        maxWidth="max-w-[400px]"
+        footer={
+          <>
+            <button
+              onClick={() => setActionModal(null)}
+              className="rounded-xl border border-border px-4 py-2.5 text-[11px] font-bold hover:bg-muted transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => setActionModal(null)}
+              className={`rounded-xl px-4 py-2.5 text-[11px] font-bold text-white transition hover:opacity-90 ${
+                actionModal?.tone === 'rose'
+                  ? 'bg-rose-600'
+                  : actionModal?.tone === 'green'
+                  ? 'bg-emerald-600'
+                  : 'bg-primary'
+              }`}
+            >
+              {actionModal?.actionText}
+            </button>
+          </>
+        }
+      />
     </div>
   );
 }

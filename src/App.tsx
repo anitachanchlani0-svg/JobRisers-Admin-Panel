@@ -1,10 +1,10 @@
 import { type ReactNode, useState } from 'react';
 import {
   Activity, AlertCircle, ArrowDownRight, ArrowRight, ArrowUpRight,
-  Bell, BriefcaseBusiness, Building2, Check, CheckCircle2, ChevronDown, ChevronRight,
-  CircleHelp, ClipboardList, Clock3, FileText, Filter, LayoutDashboard,
-  ListFilter, LockKeyhole, Menu, Search, Settings2, Shield,
-  ShieldAlert, Sparkles, Users, X,
+  Bell, BriefcaseBusiness, Building2, Calendar, Check, CheckCircle2, ChevronDown, ChevronRight,
+  CircleHelp, ClipboardList, Clock3, CreditCard, FileText, Filter, LayoutDashboard,
+  ListFilter, LockKeyhole, Menu, MessageSquare, Search, Settings2, Shield,
+  ShieldAlert, Sliders, Sparkles, Users, X,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate, Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ui';
@@ -12,6 +12,17 @@ import { Overview } from '@/pages/Overview';
 import { DirectoryPage } from '@/pages/Directory';
 import { ModulePage } from '@/pages/Module';
 import { NotFound } from '@/pages/NotFound';
+import { InterviewsPage } from '@/pages/Interviews';
+import { MessagingPage } from '@/pages/Messaging';
+import { RecommendationsPage } from '@/pages/Recommendations';
+import { EmployerBillingPage } from '@/pages/EmployerBilling';
+import {
+  CandidateDetailPage,
+  EmployerDetailPage,
+  JobDetailPage,
+  ApplicationDetailPage,
+  SupportTicketDetailPage,
+} from '@/pages';
 
 const navGroups = [
   { label: 'WORKSPACE', links: [
@@ -20,18 +31,22 @@ const navGroups = [
     { name: 'Employers', href: '/employers', icon: Building2 },
     { name: 'Jobs', href: '/jobs', icon: BriefcaseBusiness },
     { name: 'Applications', href: '/applications', icon: ClipboardList },
+    { name: 'Interviews', href: '/interviews', icon: Calendar },
   ] },
   { label: 'OPERATIONS', links: [
     { name: 'Master data', href: '/master-data', icon: ListFilter },
     { name: 'Content', href: '/content', icon: FileText },
     { name: 'Resume Pro', href: '/resume-pro', icon: Sparkles },
+    { name: 'Employer billing', href: '/employer-billing', icon: CreditCard },
     { name: 'Communication', href: '/communication', icon: Bell },
+    { name: 'Messaging', href: '/messaging', icon: MessageSquare },
   ] },
   { label: 'PROTECTION', links: [
     { name: 'Trust & safety', href: '/trust-safety', icon: ShieldAlert },
     { name: 'Support', href: '/support', icon: CircleHelp },
   ] },
   { label: 'INSIGHTS & ACCESS', links: [
+    { name: 'Recommendations', href: '/recommendations', icon: Sliders },
     { name: 'Analytics', href: '/analytics', icon: Activity },
     { name: 'Settings', href: '/settings', icon: Settings2 },
   ] },
@@ -43,12 +58,16 @@ const pageMeta: Record<string, { title: string; eyebrow: string; description: st
   '/employers': { title: 'Employers', eyebrow: 'MARKETPLACE / ACCOUNTS', description: 'Review company accounts, verification and employer standing.' },
   '/jobs': { title: 'Jobs', eyebrow: 'MARKETPLACE / MODERATION', description: 'Keep listings accurate, safe and useful for candidates.' },
   '/applications': { title: 'Applications', eyebrow: 'MARKETPLACE / OVERSIGHT', description: 'Application oversight for the two-sided marketplace.' },
+  '/interviews': { title: 'Interviews', eyebrow: 'MARKETPLACE / SCHEDULING', description: 'Track interview coordination, status and candidate scheduling across employers.' },
   '/master-data': { title: 'Master data', eyebrow: 'PLATFORM / TAXONOMY', description: 'Manage the shared categories that keep marketplace data consistent.' },
   '/content': { title: 'Content', eyebrow: 'PLATFORM / CONTENT', description: 'Manage CMS content and transactional email templates.' },
   '/resume-pro': { title: 'Resume Pro', eyebrow: 'PRODUCT / SUBSCRIPTIONS', description: 'Operate templates, plans, subscriptions and refund workflows.' },
+  '/employer-billing': { title: 'Employer billing', eyebrow: 'MONETIZATION / ACCOUNTS', description: 'Manage employer subscription tiers, job packages, invoices and credits.' },
   '/communication': { title: 'Communication', eyebrow: 'PLATFORM / DELIVERY', description: 'Coordinate alerts and broadcasts, then monitor delivery.' },
+  '/messaging': { title: 'Messaging', eyebrow: 'PLATFORM / OVERSIGHT', description: 'Monitor communication threads, flagged messages and user interaction safety.' },
   '/trust-safety': { title: 'Trust & safety', eyebrow: 'PROTECTION / CASEWORK', description: 'Review reports, blacklist records and fraud signals.' },
   '/support': { title: 'Support', eyebrow: 'CUSTOMER CARE / QUEUE', description: 'Keep candidate and employer support requests moving.' },
+  '/recommendations': { title: 'Recommendations', eyebrow: 'INTELLIGENCE / MATCHING', description: 'Monitor and tune matching algorithms, recommendation quality and scoring.' },
   '/analytics': { title: 'Analytics', eyebrow: 'INTELLIGENCE / REPORTS', description: 'Growth, funnel, search and revenue reporting.' },
   '/settings': { title: 'Settings', eyebrow: 'PLATFORM / GOVERNANCE', description: 'Platform controls, role access, compliance and audit history.' },
 };
@@ -59,13 +78,36 @@ function Shell() {
   const [mobileNav, setMobileNav] = useState(false);
   const [query, setQuery] = useState('');
 
-  const current = pageMeta[location.pathname] ?? pageMeta['/'];
-  const activeLink = navGroups.flatMap((group) => group.links).find((item) => item.href === location.pathname);
+  const getPageMeta = (pathname: string) => {
+    if (pageMeta[pathname]) return pageMeta[pathname];
+    if (pathname.startsWith('/candidates/')) {
+      return { title: 'Candidate Profile', eyebrow: 'MARKETPLACE / PEOPLE', description: 'Comprehensive candidate record, verification status, and application history.' };
+    }
+    if (pathname.startsWith('/employers/')) {
+      return { title: 'Employer Account', eyebrow: 'MARKETPLACE / ACCOUNTS', description: 'Employer company profile, verification standing, posted jobs, and billing.' };
+    }
+    if (pathname.startsWith('/jobs/')) {
+      return { title: 'Job Listing Detail', eyebrow: 'MARKETPLACE / MODERATION', description: 'Review job requirements, compensation, moderation status, and applicant flow.' };
+    }
+    if (pathname.startsWith('/applications/')) {
+      return { title: 'Application Detail', eyebrow: 'MARKETPLACE / OVERSIGHT', description: 'Candidate application details, screening responses, resume, and ATS pipeline stage.' };
+    }
+    if (pathname.startsWith('/support/')) {
+      return { title: 'Support Ticket Detail', eyebrow: 'CUSTOMER CARE / QUEUE', description: 'Review support inquiry thread, requester information, and customer care resolution.' };
+    }
+    return pageMeta['/'];
+  };
+
+  const current = getPageMeta(location.pathname);
+  const activeLink = navGroups.flatMap((group) => group.links).find((item) => {
+    if (item.href === '/') return location.pathname === '/';
+    return location.pathname === item.href || location.pathname.startsWith(item.href + '/');
+  });
   const activeGroup = activeLink?.name ?? 'Overview';
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
-      {mobileNav && <button aria-label="Close navigation" onClick={() => setMobileNav(false)} className="fixed inset-0 z-30 bg-slate-950/30 md:hidden" />}
+      {mobileNav && <button aria-label="Close navigation" onClick={() => setMobileNav(false)} className="fixed inset-0 z-30 bg-slate-950/30 lg:hidden" />}
       <aside className={`fixed inset-y-0 left-0 z-40 flex w-[252px] flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 lg:translate-x-0 ${mobileNav ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex h-[78px] items-center gap-3 border-b border-sidebar-border px-6">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm"><span className="font-display text-lg font-extrabold">J</span></div>
@@ -81,7 +123,7 @@ function Shell() {
               <p className="mb-2 px-3 text-[9px] font-bold tracking-[.16em] text-muted-foreground/80">{group.label}</p>
               <div className="space-y-1">
                 {group.links.map(({ name, href, icon: Icon }) => {
-                  const selected = location.pathname === href;
+                  const selected = location.pathname === href || (href !== '/' && location.pathname.startsWith(href + '/'));
                   return (
                     <Link
                       key={href}
@@ -89,7 +131,7 @@ function Shell() {
                       data-testid={`link-nav-${name.toLowerCase().replaceAll(' ', '-')}`}
                       aria-current={selected ? 'page' : undefined}
                       onClick={() => setMobileNav(false)}
-                      className={`group flex h-10 items-center gap-3 rounded-lg px-3 text-[13px] font-medium transition-colors ${selected ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-[inset_2px_0_0_hsl(var(--primary))]' : 'text-sidebar-foreground hover:bg-sidebar-accent/70 hover:text-foreground'}`}
+                      className={`group relative flex h-10 items-center gap-3 rounded-lg px-3 text-[13px] font-medium transition-colors ${selected ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[3px] before:rounded-r before:bg-primary shadow-sm' : 'text-sidebar-foreground hover:bg-sidebar-accent/70 hover:text-foreground'}`}
                     >
                       <Icon size={17} strokeWidth={selected ? 2.2 : 1.8} /><span>{name}</span>
                     </Link>
@@ -111,17 +153,17 @@ function Shell() {
         </div>
       </aside>
       <div className="min-h-[100dvh] lg:pl-[252px]">
-        <header className="sticky top-0 z-20 flex h-[70px] items-center gap-3 border-b border-border/80 bg-background/95 px-4 backdrop-blur-md sm:px-7 lg:px-10">
-          <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted lg:hidden" aria-label="Open navigation" onClick={() => setMobileNav(true)}><Menu size={19} /></button>
+        <header className="sticky top-0 z-20 flex h-[70px] items-center gap-2.5 sm:gap-3 border-b border-border/80 bg-background/95 px-3 sm:px-7 lg:px-10 backdrop-blur-md">
+          <button className="shrink-0 rounded-lg p-2 text-muted-foreground hover:bg-muted lg:hidden" aria-label="Open navigation" onClick={() => setMobileNav(true)}><Menu size={19} /></button>
           <div className="hidden min-w-0 items-center gap-2 text-[12px] text-muted-foreground lg:flex"><span>Admin</span><ChevronRight size={13} /><span className="font-semibold text-foreground">{activeGroup}</span></div>
-          <div className="relative ml-auto w-full max-w-[370px]">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input aria-label="Search current directory" data-testid="input-global-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Search ${activeGroup.toLowerCase()}…`} className="h-10 w-full rounded-xl border border-border bg-card pl-9 pr-12 text-[12px] outline-none transition focus:border-primary/50 focus:ring-4 focus:ring-primary/10" />
+          <div className="relative ml-auto min-w-0 flex-1 max-w-[370px]">
+            <Search size={16} className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 text-muted-foreground shrink-0" />
+            <input aria-label="Search current directory" data-testid="input-global-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={`Search ${activeGroup.toLowerCase()}…`} className="h-9 sm:h-10 w-full min-w-0 rounded-xl border border-border bg-card pl-8 sm:pl-9 pr-3 sm:pr-12 text-[11px] sm:text-[12px] outline-none transition focus:border-primary/50 focus:ring-4 focus:ring-primary/10" />
           </div>
           <span className="hidden whitespace-nowrap rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[9px] font-bold tracking-wide text-amber-800 sm:inline-flex">SAMPLE DATA</span>
           <Link aria-label="Open communication workspace" title="Open communication workspace" data-testid="link-notifications" to="/communication" className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition hover:bg-accent hover:text-primary"><Bell size={17} /></Link>
           <div className="hidden h-8 w-px bg-border sm:block" />
-          <div aria-label="Administrator profile" className="hidden items-center gap-2 rounded-lg p-1.5 text-left sm:flex"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e4dcfb] text-[11px] font-bold text-[#5842a7]">OA</div><ChevronDown size={14} className="text-muted-foreground" /></div>
+          <div aria-label="Administrator profile" className="hidden cursor-pointer items-center gap-2 rounded-lg p-1.5 text-left transition hover:bg-accent/60 sm:flex"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e4dcfb] text-[11px] font-bold text-[#5842a7]">OA</div><ChevronDown size={14} className="text-muted-foreground" /></div>
         </header>
         <main className="mx-auto max-w-[1600px] px-4 pb-12 pt-8 sm:px-7 lg:px-10">
           <div className="mb-7">
@@ -134,18 +176,27 @@ function Shell() {
           <div className="app-enter">
             <Routes>
               <Route path="/" element={<Overview />} />
-              <Route path="/candidates" element={<DirectoryPage kind="candidates" title="Candidates" eyebrow="MARKETPLACE / PEOPLE" description="Candidate directory · personal details remain masked by default." />} />
-              <Route path="/employers" element={<DirectoryPage kind="employers" title="Employers" eyebrow="MARKETPLACE / ACCOUNTS" description="Review company accounts, verification and employer standing." />} />
-              <Route path="/jobs" element={<DirectoryPage kind="jobs" title="Jobs" eyebrow="MARKETPLACE / MODERATION" description="Keep listings accurate, safe and useful for candidates." />} />
-              <Route path="/applications" element={<ModulePage module="applications" title="Applications" eyebrow="MARKETPLACE / OVERSIGHT" description="Application oversight for the two-sided marketplace." />} />
-              <Route path="/master-data" element={<ModulePage module="master-data" title="Master data" eyebrow="PLATFORM / TAXONOMY" description="Manage the shared categories that keep marketplace data consistent." />} />
-              <Route path="/content" element={<ModulePage module="content" title="Content" eyebrow="PLATFORM / CONTENT" description="Manage CMS content and transactional email templates." />} />
-              <Route path="/resume-pro" element={<ModulePage module="resume-pro" title="Resume Pro" eyebrow="PRODUCT / SUBSCRIPTIONS" description="Operate templates, plans, subscriptions and refund workflows." />} />
-              <Route path="/communication" element={<ModulePage module="communication" title="Communication" eyebrow="PLATFORM / DELIVERY" description="Coordinate alerts and broadcasts, then monitor delivery." />} />
-              <Route path="/trust-safety" element={<ModulePage module="trust-safety" title="Trust & safety" eyebrow="PROTECTION / CASEWORK" description="Review reports, blacklist records and fraud signals." />} />
-              <Route path="/support" element={<ModulePage module="support" title="Support" eyebrow="CUSTOMER CARE / QUEUE" description="Keep candidate and employer support requests moving." />} />
-              <Route path="/analytics" element={<ModulePage module="analytics" title="Analytics" eyebrow="INTELLIGENCE / REPORTS" description="Growth, funnel, search and revenue reporting." />} />
-              <Route path="/settings" element={<ModulePage module="settings" title="Settings" eyebrow="PLATFORM / GOVERNANCE" description="Platform controls, role access, compliance and audit history." />} />
+              <Route path="/candidates" element={<DirectoryPage key="candidates" kind="candidates" title="Candidates" eyebrow="MARKETPLACE / PEOPLE" description="Candidate directory · personal details remain masked by default." />} />
+              <Route path="/candidates/:id" element={<CandidateDetailPage />} />
+              <Route path="/employers" element={<DirectoryPage key="employers" kind="employers" title="Employers" eyebrow="MARKETPLACE / ACCOUNTS" description="Review company accounts, verification and employer standing." />} />
+              <Route path="/employers/:id" element={<EmployerDetailPage />} />
+              <Route path="/jobs" element={<DirectoryPage key="jobs" kind="jobs" title="Jobs" eyebrow="MARKETPLACE / MODERATION" description="Keep listings accurate, safe and useful for candidates." />} />
+              <Route path="/jobs/:id" element={<JobDetailPage />} />
+              <Route path="/applications" element={<ModulePage key="applications" module="applications" title="Applications" eyebrow="MARKETPLACE / OVERSIGHT" description="Application oversight for the two-sided marketplace." />} />
+              <Route path="/applications/:id" element={<ApplicationDetailPage />} />
+              <Route path="/interviews" element={<InterviewsPage />} />
+              <Route path="/messaging" element={<MessagingPage />} />
+              <Route path="/recommendations" element={<RecommendationsPage />} />
+              <Route path="/employer-billing" element={<EmployerBillingPage />} />
+              <Route path="/master-data" element={<ModulePage key="master-data" module="master-data" title="Master data" eyebrow="PLATFORM / TAXONOMY" description="Manage the shared categories that keep marketplace data consistent." />} />
+              <Route path="/content" element={<ModulePage key="content" module="content" title="Content" eyebrow="PLATFORM / CONTENT" description="Manage CMS content and transactional email templates." />} />
+              <Route path="/resume-pro" element={<ModulePage key="resume-pro" module="resume-pro" title="Resume Pro" eyebrow="PRODUCT / SUBSCRIPTIONS" description="Operate templates, plans, subscriptions and refund workflows." />} />
+              <Route path="/communication" element={<ModulePage key="communication" module="communication" title="Communication" eyebrow="PLATFORM / DELIVERY" description="Coordinate alerts and broadcasts, then monitor delivery." />} />
+              <Route path="/trust-safety" element={<ModulePage key="trust-safety" module="trust-safety" title="Trust & safety" eyebrow="PROTECTION / CASEWORK" description="Review reports, blacklist records and fraud signals." />} />
+              <Route path="/support" element={<ModulePage key="support" module="support" title="Support" eyebrow="CUSTOMER CARE / QUEUE" description="Keep candidate and employer support requests moving." />} />
+              <Route path="/support/:id" element={<SupportTicketDetailPage />} />
+              <Route path="/analytics" element={<ModulePage key="analytics" module="analytics" title="Analytics" eyebrow="INTELLIGENCE / REPORTS" description="Growth, funnel, search and revenue reporting." />} />
+              <Route path="/settings" element={<ModulePage key="settings" module="settings" title="Settings" eyebrow="PLATFORM / GOVERNANCE" description="Platform controls, role access, compliance and audit history." />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
