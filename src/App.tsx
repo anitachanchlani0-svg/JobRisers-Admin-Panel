@@ -22,6 +22,7 @@ import {
   JobDetailPage,
   ApplicationDetailPage,
   SupportTicketDetailPage,
+  AdminLogin,
 } from '@/pages';
 
 const navGroups = [
@@ -212,6 +213,16 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
 }
 
 function App() {
+  const location = useLocation();
+
+  if (location.pathname === '/login') {
+    return (
+      <RoutedErrorBoundary>
+        <AdminLogin />
+      </RoutedErrorBoundary>
+    );
+  }
+
   return (
     <RoutedErrorBoundary>
       <Shell />

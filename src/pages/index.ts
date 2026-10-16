@@ -11,3 +11,4 @@ export { EmployerDetailPage } from './EmployerDetail';
 export { JobDetailPage } from './JobDetail';
 export { ApplicationDetailPage } from './ApplicationDetail';
 export { SupportTicketDetailPage } from './SupportTicketDetail';
+export { AdminLogin } from './AdminLogin';

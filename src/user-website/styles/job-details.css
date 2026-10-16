@@ -1,0 +1,935 @@
+/* ==========================================================================
+   JobRisers User Website — Screen 3: Job Details Page Stylesheet
+   Faithful reproduction of reference screenshot (media_1792130456424.png)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root Container & Page Reset
+   -------------------------------------------------------------------------- */
+.jd-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  color: #111827;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   Top Navigation Bar
+   -------------------------------------------------------------------------- */
+.jd-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid #edf0f5;
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.jd-nav__container {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.jd-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.jd-nav__logo-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.jd-nav__logo-text {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  display: flex;
+}
+
+.jd-nav__logo-text--job {
+  color: #111827;
+}
+
+.jd-nav__logo-text--risers {
+  color: #3b82f6;
+}
+
+/* Center Links */
+.jd-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 56px;
+}
+
+.jd-nav__link {
+  position: relative;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.jd-nav__link:hover {
+  color: #111827;
+}
+
+.jd-nav__link--active {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.jd-nav__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #4f46e5;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Right User Profile */
+.jd-nav__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.jd-nav__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.02em;
+}
+
+.jd-nav__username {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* --------------------------------------------------------------------------
+   Breadcrumb & Actions Row
+   -------------------------------------------------------------------------- */
+.jd-breadcrumb-bar {
+  background: transparent;
+  padding: 12px 0 8px;
+}
+
+.jd-breadcrumb-bar__container {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jd-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.jd-breadcrumb__link {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.15s ease;
+}
+
+.jd-breadcrumb__link:hover {
+  text-decoration: underline;
+}
+
+.jd-breadcrumb__separator {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.jd-breadcrumb__current {
+  color: #111827;
+  font-weight: 600;
+}
+
+.jd-breadcrumb__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.jd-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.jd-action-btn svg {
+  color: #4f46e5;
+}
+
+.jd-action-btn:hover {
+  background: #f1f5f9;
+  color: #111827;
+}
+
+.jd-action-btn--saved {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Main 2-Column Grid Layout
+   -------------------------------------------------------------------------- */
+.jd-main {
+  flex: 1;
+  padding: 6px 0 36px;
+}
+
+.jd-container {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 295px;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* --------------------------------------------------------------------------
+   Left Column: Summary Card
+   -------------------------------------------------------------------------- */
+.jd-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.jd-summary-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #edf0f5;
+  padding: 18px 22px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.jd-summary-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.jd-summary-card__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Google Logo Mark */
+.jd-company-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.jd-company-logo--google {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #ea4335;
+  font-size: 20px;
+  font-weight: 800;
+  font-family: 'Product Sans', 'Inter', sans-serif;
+}
+
+.jd-company-logo--sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.jd-summary-card__header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.jd-summary-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+  margin: 0 0 2px;
+  line-height: 1.25;
+}
+
+.jd-summary-card__company {
+  font-size: 12.5px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.jd-summary-card__posted {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+/* Meta Row (Location, Mode, Exp, Full-time) */
+.jd-summary-card__meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.jd-meta-tag {
+  font-size: 11px;
+  color: #475569;
+  font-weight: 500;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 2.5px 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.jd-meta-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2.5px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.jd-meta-pill--green {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* Skill Tags */
+.jd-summary-card__skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.jd-skill-tag {
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+}
+
+/* --------------------------------------------------------------------------
+   Left Column: Detailed Job Description Content
+   -------------------------------------------------------------------------- */
+.jd-content-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+}
+
+.jd-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.jd-section__title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+}
+
+.jd-section__text {
+  font-size: 12px;
+  color: #4b5563;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.jd-section__list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  list-style: none;
+}
+
+.jd-section__list li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 12px;
+  color: #4b5563;
+  line-height: 1.45;
+}
+
+.jd-section__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 4.5px;
+  height: 4.5px;
+  border-radius: 50%;
+  background-color: #4f46e5;
+}
+
+/* Preferred Skills Row */
+.jd-preferred-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Left Column: Benefits Grid (6 Pastel Tiles)
+   -------------------------------------------------------------------------- */
+.jd-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.jd-benefit-tile {
+  border-radius: 10px;
+  padding: 10px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 5px;
+  border: 1px solid transparent;
+  min-height: 68px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.jd-benefit-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.jd-benefit-tile__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jd-benefit-tile__label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Benefit Variants */
+.jd-benefit-tile--red {
+  background: #fef2f2;
+  border-color: #fee2e2;
+  color: #ef4444;
+}
+
+.jd-benefit-tile--teal {
+  background: #f0fdfa;
+  border-color: #ccfbf1;
+  color: #0d9488;
+}
+
+.jd-benefit-tile--blue {
+  background: #eef2ff;
+  border-color: #e0e7ff;
+  color: #4f46e5;
+}
+
+.jd-benefit-tile--yellow {
+  background: #fefce8;
+  border-color: #fef08a;
+  color: #ca8a04;
+}
+
+.jd-benefit-tile--sky {
+  background: #f0f9ff;
+  border-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.jd-benefit-tile--purple {
+  background: #faf5ff;
+  border-color: #f3e8ff;
+  color: #7c3aed;
+}
+
+/* --------------------------------------------------------------------------
+   Left Column: Application Deadline Card
+   -------------------------------------------------------------------------- */
+.jd-deadline-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #edf0f5;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  margin-top: 2px;
+}
+
+.jd-deadline-card__left {
+  display: flex;
+  flex-direction: column;
+}
+
+.jd-deadline-card__eyebrow {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.jd-deadline-card__date {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4f46e5;
+  margin-top: 1px;
+}
+
+.jd-deadline-card__note {
+  font-size: 10.5px;
+  color: #6b7280;
+  margin-top: 1px;
+}
+
+.jd-deadline-card__right {
+  display: flex;
+  align-items: center;
+}
+
+.jd-deadline-card__slogan {
+  font-size: 10.5px;
+  color: #6b7280;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   Right Column: Aside Cards
+   -------------------------------------------------------------------------- */
+.jd-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 66px;
+}
+
+.jd-side-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #edf0f5;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Apply & Save Buttons */
+.jd-apply-btn {
+  width: 100%;
+  height: 36px;
+  background: #4f46e5;
+  color: #ffffff;
+  border: none;
+  border-radius: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.jd-apply-btn:hover {
+  background: #4338ca;
+}
+
+.jd-save-btn {
+  width: 100%;
+  height: 34px;
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 7px;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jd-save-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.jd-save-btn--saved {
+  background: #eef2ff;
+  color: #4f46e5;
+  border-color: #c7d2fe;
+}
+
+.jd-save-btn--saved:hover {
+  background: #e0e7ff;
+}
+
+.jd-side-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 12px 0 11px;
+}
+
+/* Side Spec Rows */
+.jd-side-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jd-spec-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.jd-spec-item__icon-box {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.jd-spec-item__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.jd-spec-item__value {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.15;
+}
+
+.jd-spec-item__label {
+  font-size: 9.5px;
+  color: #9ca3af;
+  margin-top: 1px;
+}
+
+/* About Google Card */
+.jd-side-card__heading {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+.jd-about-company__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.jd-about-company__name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.jd-about-company__desc {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.4;
+  margin: 0 0 10px;
+}
+
+.jd-about-company__meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.jd-company-meta-item {
+  font-size: 11px;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+}
+
+.jd-company-meta-link {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.jd-company-meta-link:hover {
+  text-decoration: underline;
+}
+
+.jd-view-profile-btn {
+  width: 100%;
+  height: 32px;
+  background: #eef2ff;
+  color: #4f46e5;
+  border: 1px solid #e0e7ff;
+  border-radius: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jd-view-profile-btn:hover {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+/* Similar Jobs Card */
+.jd-side-card__header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.jd-view-all-link {
+  font-size: 11px;
+  font-weight: 600;
+  color: #4f46e5;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.jd-view-all-link:hover {
+  text-decoration: underline;
+}
+
+.jd-similar-jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.jd-similar-job-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease;
+  padding: 1px 0;
+}
+
+.jd-similar-job__logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.jd-similar-job__logo--microsoft {
+  background: #e0f2fe;
+}
+
+.jd-similar-job__logo--amazon {
+  background: #fef9c3;
+}
+
+.jd-similar-job__logo--adobe {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.jd-similar-job__logo--spotify {
+  background: #dcfce7;
+}
+
+.jd-similar-job__details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.jd-similar-job__title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.jd-similar-job__company {
+  font-size: 10.5px;
+  color: #6b7280;
+  margin-top: 1px;
+}
+
+.jd-similar-job__location {
+  font-size: 9.5px;
+  color: #9ca3af;
+  margin-top: 1px;
+}
+
+.jd-similar-job__time {
+  font-size: 9.5px;
+  color: #9ca3af;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   Toast / Notification Banner
+   -------------------------------------------------------------------------- */
+.jd-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #111827;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: jd-toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes jd-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Design
+   -------------------------------------------------------------------------- */
+@media (max-width: 1080px) {
+  .jd-container {
+    grid-template-columns: 1fr;
+  }
+
+  .jd-right-col {
+    position: static;
+  }
+
+  .jd-benefits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .jd-nav__links {
+    display: none;
+  }
+
+  .jd-benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jd-container {
+    padding: 0 16px;
+  }
+
+  .jd-breadcrumb-bar__container {
+    padding: 0 16px;
+  }
+}

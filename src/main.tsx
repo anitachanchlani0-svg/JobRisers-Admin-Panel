@@ -11,7 +11,7 @@ createRoot(document.getElementById('root')!, {
     console.error(error, errorInfo.componentStack);
   },
 }).render(
-  <BrowserRouter>
+  <BrowserRouter basename="/admin">
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
