@@ -55,7 +55,7 @@ export function SupportTicketDetailPage() {
     return (
       <div className="space-y-4">
         <Link
-          to="/support"
+          to="/admin/support"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={14} /> Back to Support
@@ -123,7 +123,7 @@ export function SupportTicketDetailPage() {
       {/* Top Back Navigation Bar */}
       <div className="flex items-center justify-between">
         <Link
-          to="/support"
+          to="/admin/support"
           data-testid="link-back-to-support"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors group"
         >

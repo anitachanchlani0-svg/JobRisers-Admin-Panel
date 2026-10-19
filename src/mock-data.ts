@@ -9362,6 +9362,76 @@ export const initialAdminRbacMatrix: RbacModuleRow[] = [
       Analyst: 'None',
     },
   },
+  {
+    moduleId: 'mod-18',
+    moduleName: 'Talent Network',
+    category: 'Operations',
+    permissions: {
+      'Super Admin': 'Full',
+      'Operations Admin': 'Full',
+      Moderator: 'View',
+      'Content Manager': 'None',
+      'Support Agent': 'View',
+      Finance: 'None',
+      Analyst: 'View',
+    },
+  },
+  {
+    moduleId: 'mod-19',
+    moduleName: 'Salary Benchmark',
+    category: 'Insights & Access',
+    permissions: {
+      'Super Admin': 'Full',
+      'Operations Admin': 'Full',
+      Moderator: 'None',
+      'Content Manager': 'None',
+      'Support Agent': 'None',
+      Finance: 'Full',
+      Analyst: 'View',
+    },
+  },
+  {
+    moduleId: 'mod-20',
+    moduleName: 'Interview Prep',
+    category: 'Insights & Access',
+    permissions: {
+      'Super Admin': 'Full',
+      'Operations Admin': 'Full',
+      Moderator: 'None',
+      'Content Manager': 'Full',
+      'Support Agent': 'View',
+      Finance: 'None',
+      Analyst: 'View',
+    },
+  },
+  {
+    moduleId: 'mod-21',
+    moduleName: 'AI Cover Letter',
+    category: 'Insights & Access',
+    permissions: {
+      'Super Admin': 'Full',
+      'Operations Admin': 'Full',
+      Moderator: 'None',
+      'Content Manager': 'Full',
+      'Support Agent': 'None',
+      Finance: 'None',
+      Analyst: 'View',
+    },
+  },
+  {
+    moduleId: 'mod-22',
+    moduleName: 'Admin Profile',
+    category: 'Insights & Access',
+    permissions: {
+      'Super Admin': 'Full',
+      'Operations Admin': 'Full',
+      Moderator: 'Full',
+      'Content Manager': 'Full',
+      'Support Agent': 'Full',
+      Finance: 'Full',
+      Analyst: 'Full',
+    },
+  },
 ];
 
 export const initialAdminFeatureFlags: AdminFeatureFlagConfig[] = [
@@ -9954,5 +10024,520 @@ export const initialAdminSsoConfig: AdminSsoConfig = {
   enforced: false,
   status: 'Configured',
   lastVerified: 'Oct 14, 2026 at 02:45 PM IST',
+};
+
+// ==========================================
+// BATCH 5: FINAL AUXILIARY TOOLS & EXTERNAL PORTALS (AUTH-7, EXT-1, EXT-2, EXT-3, EXT-4)
+// ==========================================
+
+// 1. EXT-1: Talent Network Portal Configuration
+export interface AdminTalentNetworkSection {
+  id: string;
+  name: string;
+  description: string;
+  active: boolean;
+  order: number;
+}
+
+export interface AdminTalentNetworkConfig {
+  portalStatus: 'Live' | 'Maintenance' | 'Draft';
+  portalTitle: string;
+  heroTagline: string;
+  primaryColor: string;
+  publicSearchIndexing: boolean;
+  directRecruiterInquiries: boolean;
+  maskPiiOnPublic: boolean;
+  autoAddShortlisted: boolean;
+  joinUrlSlug: string;
+  sections: AdminTalentNetworkSection[];
+  stats: {
+    totalCandidates: number;
+    activeEmployers: number;
+    monthlySearches: number;
+    weeklyAdditions: number;
+  };
+  lastPublished: string;
+}
+
+export const initialAdminTalentNetworkConfig: AdminTalentNetworkConfig = {
+  portalStatus: 'Live',
+  portalTitle: 'JobRisers Verified Talent Network',
+  heroTagline: 'Join the top 5% verified tech talent pool fast-tracking careers at high-growth Indian startups.',
+  primaryColor: '#6366f1',
+  publicSearchIndexing: true,
+  directRecruiterInquiries: true,
+  maskPiiOnPublic: true,
+  autoAddShortlisted: true,
+  joinUrlSlug: '/network/join',
+  sections: [
+    { id: 'sec-1', name: 'Featured Startup Engineering Teams', description: 'Curated roster of Series A-D tech employers hiring directly', active: true, order: 1 },
+    { id: 'sec-2', name: 'High-Demand Skill Clusters', description: 'React 19, TypeScript, Generative AI, Kubernetes, FinTech APIs', active: true, order: 2 },
+    { id: 'sec-3', name: 'Elite Verified Candidate Badges', description: 'Candidates with verified work history, MCA credentials, and skill scores', active: true, order: 3 },
+    { id: 'sec-4', name: 'Weekly Fast-Track Placements', description: 'Showcase of recently placed platform alumni across partner companies', active: true, order: 4 },
+  ],
+  stats: {
+    totalCandidates: 14820,
+    activeEmployers: 284,
+    monthlySearches: 64200,
+    weeklyAdditions: 340,
+  },
+  lastPublished: 'Today at 08:00 AM IST',
+};
+
+// 2. EXT-2: Salary Benchmark Tool Configuration
+export interface AdminSalaryBenchmarkEntry {
+  id: string;
+  category: string;
+  role: string;
+  city: string;
+  experienceLevel: 'Entry (0-2y)' | 'Mid-Level (2-5y)' | 'Senior (5-8y)' | 'Lead / Staff (8-12y)' | 'Principal / VP (12+y)';
+  currency: 'INR' | 'USD';
+  minSalary: number; // in LPA or $k
+  p25Salary: number;
+  medianSalary: number;
+  p75Salary: number;
+  maxSalary: number;
+  dataSource: string;
+  lastUpdated: string;
+  status: 'Published' | 'Draft' | 'Review Required';
+}
+
+export const initialAdminSalaryBenchmarks: AdminSalaryBenchmarkEntry[] = [
+  {
+    id: 'sb-101',
+    category: 'Engineering',
+    role: 'Senior Frontend Engineer',
+    city: 'Bengaluru, KA',
+    experienceLevel: 'Senior (5-8y)',
+    currency: 'INR',
+    minSalary: 22.0,
+    p25Salary: 28.0,
+    medianSalary: 34.5,
+    p75Salary: 42.0,
+    maxSalary: 55.0,
+    dataSource: 'Verified Offer Letters (74%) & Harvest ATS Ingest',
+    lastUpdated: 'Oct 15, 2026',
+    status: 'Published',
+  },
+  {
+    id: 'sb-102',
+    category: 'Engineering',
+    role: 'Staff Backend Engineer (Distributed Systems)',
+    city: 'Bengaluru, KA',
+    experienceLevel: 'Lead / Staff (8-12y)',
+    currency: 'INR',
+    minSalary: 45.0,
+    p25Salary: 55.0,
+    medianSalary: 68.0,
+    p75Salary: 82.0,
+    maxSalary: 110.0,
+    dataSource: 'Placement Data & Recruiter Disclosures',
+    lastUpdated: 'Oct 12, 2026',
+    status: 'Published',
+  },
+  {
+    id: 'sb-103',
+    category: 'Product',
+    role: 'Product Manager (Core Growth & UPI)',
+    city: 'Delhi NCR, DL/HR',
+    experienceLevel: 'Senior (5-8y)',
+    currency: 'INR',
+    minSalary: 24.0,
+    p25Salary: 30.0,
+    medianSalary: 38.0,
+    p75Salary: 46.0,
+    maxSalary: 60.0,
+    dataSource: 'Candidate Offers & Benchmarking Survey',
+    lastUpdated: 'Oct 09, 2026',
+    status: 'Published',
+  },
+  {
+    id: 'sb-104',
+    category: 'Engineering',
+    role: 'Lead DevOps & SRE Architect',
+    city: 'Hyderabad, TS',
+    experienceLevel: 'Lead / Staff (8-12y)',
+    currency: 'INR',
+    minSalary: 35.0,
+    p25Salary: 44.0,
+    medianSalary: 52.0,
+    p75Salary: 65.0,
+    maxSalary: 85.0,
+    dataSource: 'Workday Enterprise Cloud Feed & Verifications',
+    lastUpdated: 'Oct 14, 2026',
+    status: 'Published',
+  },
+  {
+    id: 'sb-105',
+    category: 'Design',
+    role: 'Lead Product Designer',
+    city: 'Bengaluru, KA',
+    experienceLevel: 'Senior (5-8y)',
+    currency: 'INR',
+    minSalary: 20.0,
+    p25Salary: 26.0,
+    medianSalary: 32.0,
+    p75Salary: 40.0,
+    maxSalary: 50.0,
+    dataSource: 'Placement Feeds & Design Tokens Survey',
+    lastUpdated: 'Oct 11, 2026',
+    status: 'Draft',
+  },
+  {
+    id: 'sb-106',
+    category: 'Engineering',
+    role: 'Full Stack Engineer (React + Node)',
+    city: 'Pune, MH',
+    experienceLevel: 'Mid-Level (2-5y)',
+    currency: 'INR',
+    minSalary: 12.0,
+    p25Salary: 16.0,
+    medianSalary: 21.0,
+    p75Salary: 27.0,
+    maxSalary: 35.0,
+    dataSource: 'Self-Reported Surveys & Placement Records',
+    lastUpdated: 'Oct 08, 2026',
+    status: 'Published',
+  },
+];
+
+// 3. EXT-3: Interview Prep Curriculum Builder
+export interface AdminInterviewQuestion {
+  id: string;
+  text: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  rubric: string;
+}
+
+export interface AdminInterviewResource {
+  id: string;
+  title: string;
+  type: 'PDF' | 'Link' | 'Doc';
+  url: string;
+}
+
+export interface AdminInterviewLesson {
+  id: string;
+  title: string;
+  durationMin: number;
+  format: 'Video' | 'Interactive Code' | 'Reading' | 'System Design';
+  questions: AdminInterviewQuestion[];
+  resources: AdminInterviewResource[];
+}
+
+export interface AdminInterviewModule {
+  id: string;
+  title: string;
+  order: number;
+  lessons: AdminInterviewLesson[];
+}
+
+export interface AdminInterviewCurriculum {
+  id: string;
+  title: string;
+  category: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  summary: string;
+  targetRoles: string[];
+  status: 'Published' | 'Draft';
+  estimatedHours: number;
+  modules: AdminInterviewModule[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const initialAdminCurricula: AdminInterviewCurriculum[] = [
+  {
+    id: 'curr-1',
+    title: 'Distributed System Design & Microservices Architecture',
+    category: 'System Design',
+    difficulty: 'Advanced',
+    summary: 'Master real-world scalability, caching, message queues, and high-availability architecture interviews for Senior & Staff engineer loops.',
+    targetRoles: ['Staff Backend Engineer', 'Principal Architect', 'Engineering Manager'],
+    status: 'Published',
+    estimatedHours: 8,
+    createdAt: 'Sep 10, 2026',
+    updatedAt: 'Oct 12, 2026',
+    modules: [
+      {
+        id: 'mod-1',
+        title: 'Core Architectural Fundamentals & Trade-offs',
+        order: 1,
+        lessons: [
+          {
+            id: 'les-1',
+            title: 'CAP Theorem in Practice & Eventual Consistency',
+            durationMin: 35,
+            format: 'Reading',
+            questions: [
+              { id: 'q-1', text: 'How do you design a ledger balance update across partitioned databases during network partition?', difficulty: 'Hard', rubric: 'Candidate must mention two-phase commit vs saga pattern and idempotency keys.' },
+            ],
+            resources: [
+              { id: 'res-1', title: 'System Design Cheat Sheet v3', type: 'PDF', url: '/downloads/system-design-cheatsheet.pdf' },
+            ],
+          },
+          {
+            id: 'les-2',
+            title: 'Distributed Caching Strategies (Redis Cluster & Cache Aside)',
+            durationMin: 45,
+            format: 'System Design',
+            questions: [
+              { id: 'q-2', text: 'Explain how you prevent cache stampede and dogpiling under 100k QPS surges.', difficulty: 'Medium', rubric: 'Look for mutex locks, probabilistic early expiration (XFetch), and read-through caching.' },
+            ],
+            resources: [
+              { id: 'res-2', title: 'Redis Architecture Patterns', type: 'Doc', url: '/docs/redis-patterns.md' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'mod-2',
+        title: 'High-Throughput Messaging & Event Driven Pipelines',
+        order: 2,
+        lessons: [
+          {
+            id: 'les-3',
+            title: 'Kafka Partitioning, Consumer Groups & Exactly-Once Semantics',
+            durationMin: 50,
+            format: 'Interactive Code',
+            questions: [
+              { id: 'q-3', text: 'How does Kafka guarantee partition order when processing transactional events?', difficulty: 'Hard', rubric: 'Candidate should detail partition keys, producer transactional coordinators, and consumer group offset management.' },
+            ],
+            resources: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'curr-2',
+    title: 'Modern Frontend Engineering & Design Systems (React 19 & Next.js)',
+    category: 'Frontend',
+    difficulty: 'Intermediate',
+    summary: 'Comprehensive prep for React 19 concurrent features, Server Actions, design token synchronization, and web performance optimization.',
+    targetRoles: ['Senior Frontend Engineer', 'Lead UI Engineer', 'Full Stack Developer'],
+    status: 'Published',
+    estimatedHours: 6,
+    createdAt: 'Sep 20, 2026',
+    updatedAt: 'Oct 14, 2026',
+    modules: [
+      {
+        id: 'mod-3',
+        title: 'React Performance & Fiber Architecture',
+        order: 1,
+        lessons: [
+          {
+            id: 'les-4',
+            title: 'Profiling Render Cycles & Memory Leaks in Large Single Page Apps',
+            durationMin: 40,
+            format: 'Video',
+            questions: [
+              { id: 'q-4', text: 'When should you choose transition updates over deferred values in React 19?', difficulty: 'Medium', rubric: 'Differentiate between startTransition for pending states vs useDeferredValue for consumer lag.' },
+            ],
+            resources: [
+              { id: 'res-3', title: 'Frontend Architecture Checklist', type: 'PDF', url: '/downloads/fe-checklist.pdf' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'curr-3',
+    title: 'Fintech Product Manager Case Interviews & UPI Switch Architecture',
+    category: 'Product Management',
+    difficulty: 'Advanced',
+    summary: 'Master product sense, metrics estimation, regulatory compliance (RBI guidelines), and case studies for tier-1 Indian fintech unicorns.',
+    targetRoles: ['Product Manager', 'Group PM', 'Director of Product'],
+    status: 'Draft',
+    estimatedHours: 10,
+    createdAt: 'Oct 01, 2026',
+    updatedAt: 'Oct 15, 2026',
+    modules: [
+      {
+        id: 'mod-4',
+        title: 'Product Discovery & Metric Frameworks',
+        order: 1,
+        lessons: [
+          {
+            id: 'les-5',
+            title: 'Designing a Merchant Settlement Dashboard with Zero Reconciliation Errors',
+            durationMin: 60,
+            format: 'System Design',
+            questions: [
+              { id: 'q-5', text: 'Define North Star and guardrail metrics for an instant payout product.', difficulty: 'Hard', rubric: 'Evaluate trade-offs between settlement latency, fraud clawback rates, and merchant NPS.' },
+            ],
+            resources: [],
+          },
+        ],
+      },
+    ],
+  },
+];
+
+// 4. EXT-4: AI Cover Letter Fine-Tuner Configuration
+export interface AdminAiCoverLetterConfig {
+  systemPrompt: string;
+  tone: 'Professional & Authoritative' | 'Enthusiastic & Startup-ready' | 'Technical & Direct' | 'Executive & Visionary';
+  length: 'Concise (~200 words)' | 'Balanced (~350 words)' | 'Comprehensive (~500 words)';
+  temperature: number; // 0.1 - 1.0
+  antiHallucinationStrict: boolean;
+  bannedBuzzwords: string[];
+  stripPii: boolean;
+  version: string;
+  status: 'Production Active' | 'Staging' | 'Disabled';
+  lastUpdated: string;
+}
+
+export const initialAdminAiCoverLetterConfig: AdminAiCoverLetterConfig = {
+  systemPrompt: `You are an expert executive talent advocate and professional career coach for the JobRisers talent marketplace.
+Draft a highly persuasive, contextual, and authentic cover letter that connects the candidate's verified achievements directly to the target employer's core business challenges.
+Follow these guidelines strictly:
+- Open with a compelling hook demonstrating deep understanding of {company_name}'s product domain.
+- Reference verified years of experience ({years_experience} years) and primary stack ({key_skills}).
+- Quantify impact wherever applicable using data points from candidate history.
+- Maintain a humble, collaborative yet confident tone. Never use generic filler openings like 'I am writing to express my interest'.`,
+  tone: 'Professional & Authoritative',
+  length: 'Balanced (~350 words)',
+  temperature: 0.35,
+  antiHallucinationStrict: true,
+  bannedBuzzwords: ['ninja', 'rockstar', 'guru', 'synergy', 'hard-worker', 'go-getter', 'thought-leader'],
+  stripPii: true,
+  version: 'v2.4-hybrid-gemini',
+  status: 'Production Active',
+  lastUpdated: 'Oct 16, 2026 at 03:30 PM IST',
+};
+
+// 5. AUTH-7: Safe Read-Only "View as User" Audit Log
+export interface AdminViewAsUserAuditLog {
+  id: string;
+  adminName: string;
+  adminRole: string;
+  targetUserId: string;
+  targetUserName: string;
+  targetUserRole: 'Candidate' | 'Employer';
+  startTime: string;
+  endTime: string;
+  reason: string;
+  ipAddress: string;
+}
+
+export const initialAdminViewAsUserAuditLogs: AdminViewAsUserAuditLog[] = [
+  {
+    id: 'vau-log-1',
+    adminName: 'Sourabh Jhajharia',
+    adminRole: 'Super Admin',
+    targetUserId: 'can-1001',
+    targetUserName: 'Aarav Mehta',
+    targetUserRole: 'Candidate',
+    startTime: 'Today at 09:15 AM IST',
+    endTime: 'Today at 09:22 AM IST',
+    reason: 'Investigating candidate application submission display discrepancy on ticket JR-T1004.',
+    ipAddress: '14.143.32.90',
+  },
+  {
+    id: 'vau-log-2',
+    adminName: 'Platform Operations Admin',
+    adminRole: 'Operations Admin',
+    targetUserId: 'emp-2001',
+    targetUserName: 'Northstar Labs (Rohan V.)',
+    targetUserRole: 'Employer',
+    startTime: 'Yesterday at 03:40 PM IST',
+    endTime: 'Yesterday at 03:48 PM IST',
+    reason: 'Verifying recruiter seat permissions and custom ATS webhook delivery logs.',
+    ipAddress: '103.21.244.18',
+  },
+];
+
+// 6. Admin Profile Model & Initial Mock
+export interface AdminUserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  roleId: string;
+  avatarUrl?: string;
+  department: string;
+  staffId: string;
+  status: 'Active' | 'On Leave' | 'Suspended';
+  accountCreated: string;
+  lastLogin: string;
+  lastActiveIp: string;
+  phoneMasked: string;
+  phoneFull: string;
+  timezone: string;
+  twoFactorEnabled: boolean;
+  twoFactorMethod: string;
+  bio: string;
+  recentActivity: Array<{
+    id: string;
+    action: string;
+    target: string;
+    timestamp: string;
+    ipAddress: string;
+    status: 'Completed' | 'Flagged' | 'Audited';
+  }>;
+}
+
+export const initialAdminUserProfile: AdminUserProfile = {
+  id: 'adm-0042',
+  name: 'Sourabh Jhajharia',
+  email: 'sourabh@jobrisers.com',
+  role: 'Super Admin',
+  roleId: 'super-admin',
+  department: 'Platform Governance & Core Operations',
+  staffId: 'JR-EXEC-0042',
+  status: 'Active',
+  accountCreated: 'Jan 15, 2024',
+  lastLogin: 'Today at 08:30 AM IST',
+  lastActiveIp: '14.143.32.90',
+  phoneMasked: '+91 98••••••21',
+  phoneFull: '+91 98765 43221',
+  timezone: 'Asia/Kolkata (IST · UTC+5:30)',
+  twoFactorEnabled: true,
+  twoFactorMethod: 'Hardware Token (YubiKey) + TOTP Authenticator',
+  bio: 'Lead platform governance administrator managing trust & safety compliance, market salary benchmarks, DPDP 2023 compliance audits, and platform operations.',
+  recentActivity: [
+    {
+      id: 'act-101',
+      action: 'Authorized Safe Read-Only Preview (AUTH-7)',
+      target: 'Candidate: Aarav Mehta (can-1001)',
+      timestamp: 'Today at 09:15 AM IST',
+      ipAddress: '14.143.32.90',
+      status: 'Audited',
+    },
+    {
+      id: 'act-102',
+      action: 'Updated Salary Benchmark Bracket (EXT-2)',
+      target: 'Senior Full-Stack Engineer (5-8 yrs)',
+      timestamp: 'Today at 08:45 AM IST',
+      ipAddress: '14.143.32.90',
+      status: 'Completed',
+    },
+    {
+      id: 'act-103',
+      action: 'Reviewed Moderation Appeal (SAF-4)',
+      target: 'Apex Technologies (Flagged Recruiter Seat)',
+      timestamp: 'Yesterday at 04:30 PM IST',
+      ipAddress: '14.143.32.90',
+      status: 'Completed',
+    },
+    {
+      id: 'act-104',
+      action: 'Exported Master Data Taxonomy CSV (MAS-10)',
+      target: 'Platform Skills & Job Categories',
+      timestamp: 'Yesterday at 02:15 PM IST',
+      ipAddress: '14.143.32.90',
+      status: 'Completed',
+    },
+    {
+      id: 'act-105',
+      action: 'Tuned Recommendation Weight Matrix (REC-1)',
+      target: 'Skills Match (40%) + Experience (30%)',
+      timestamp: 'Oct 17, 2026 at 11:20 AM IST',
+      ipAddress: '14.143.32.90',
+      status: 'Completed',
+    },
+  ],
 };
 

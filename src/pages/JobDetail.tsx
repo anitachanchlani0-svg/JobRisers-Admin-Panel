@@ -60,7 +60,7 @@ export function JobDetailPage() {
     return (
       <div className="space-y-4">
         <Link
-          to="/jobs"
+          to="/admin/jobs"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={14} /> Back to Jobs
@@ -258,7 +258,7 @@ export function JobDetailPage() {
       {/* Top Back Navigation Bar */}
       <div className="flex items-center justify-between">
         <Link
-          to="/jobs"
+          to="/admin/jobs"
           data-testid="link-back-to-jobs"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors group"
         >

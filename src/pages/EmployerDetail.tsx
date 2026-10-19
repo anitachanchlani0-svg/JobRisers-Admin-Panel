@@ -116,7 +116,7 @@ export function EmployerDetailPage() {
     return (
       <div className="space-y-4">
         <Link
-          to="/employers"
+          to="/admin/employers"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={14} /> Back to Employers
@@ -492,7 +492,7 @@ export function EmployerDetailPage() {
       {/* Top Back Navigation Bar */}
       <div className="flex items-center justify-between">
         <Link
-          to="/employers"
+          to="/admin/employers"
           data-testid="link-back-to-employers"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors group"
         >
@@ -565,6 +565,25 @@ export function EmployerDetailPage() {
               className="flex items-center gap-1.5 rounded-xl bg-rose-50 border border-rose-200/80 px-3.5 py-2 text-[11px] font-bold text-rose-700 hover:bg-rose-100 transition-colors shadow-2xs"
             >
               <ShieldAlert size={14} /> Suspend Account
+            </button>
+            <button
+              type="button"
+              data-testid="button-view-as-employer"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent('jobrisers-view-as-user', {
+                    detail: {
+                      id: employer.id,
+                      name: employer.company,
+                      email: employer.teamMembers?.[0]?.email || 'recruiter@' + employer.company.toLowerCase().replace(/\s+/g, '') + '.com',
+                      role: 'Employer',
+                    },
+                  })
+                );
+              }}
+              className="flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-[11px] font-bold text-primary hover:bg-primary/20 transition-colors shadow-2xs cursor-pointer"
+            >
+              <Eye size={14} /> View as Recruiter (AUTH-7)
             </button>
           </div>
         </div>

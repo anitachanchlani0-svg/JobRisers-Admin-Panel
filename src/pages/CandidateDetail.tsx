@@ -125,7 +125,7 @@ export function CandidateDetailPage() {
     return (
       <div className="space-y-4">
         <Link
-          to="/candidates"
+          to="/admin/candidates"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft size={14} /> Back to Candidates
@@ -399,7 +399,7 @@ export function CandidateDetailPage() {
       {/* 1. Top Navigation Bar */}
       <div className="flex items-center justify-between">
         <Link
-          to="/candidates"
+          to="/admin/candidates"
           data-testid="link-back-to-candidates"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors group"
         >
@@ -482,6 +482,25 @@ export function CandidateDetailPage() {
               className="flex items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 py-2 text-[11px] font-bold text-foreground hover:bg-muted transition-colors shadow-2xs"
             >
               <Download size={14} className="text-primary" /> Export DSR Archive
+            </button>
+            <button
+              type="button"
+              data-testid="button-view-as-candidate"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent('jobrisers-view-as-user', {
+                    detail: {
+                      id: candidate.id,
+                      name: candidate.name,
+                      email: isUnmasked ? candidate.emailFull || candidate.emailMasked : candidate.emailMasked,
+                      role: 'Candidate',
+                    },
+                  })
+                );
+              }}
+              className="flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-[11px] font-bold text-primary hover:bg-primary/20 transition-colors shadow-2xs cursor-pointer"
+            >
+              <Eye size={14} /> View as Candidate (AUTH-7)
             </button>
           </div>
         </div>
@@ -830,7 +849,7 @@ export function CandidateDetailPage() {
                   </div>
                   <div className="text-[10px] text-muted-foreground pt-1 flex items-center justify-between border-t border-border/50">
                     <span>Saved to bookmarks</span>
-                    <Link to={`/jobs/${job.id}`} className="text-primary font-bold hover:underline">
+                    <Link to={`/admin/jobs/${job.id}`} className="text-primary font-bold hover:underline">
                       View Job →
                     </Link>
                   </div>
@@ -994,7 +1013,7 @@ export function CandidateDetailPage() {
               </p>
             </div>
             <Link
-              to="/applications"
+              to="/admin/applications"
               className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
             >
               Open Applications Hub →
