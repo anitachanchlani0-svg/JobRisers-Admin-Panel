@@ -211,17 +211,17 @@ export function Overview() {
   const handleQueueClick = (label: string) => {
     const normalized = label.toLowerCase();
     if (normalized.includes('job')) {
-      navigate('/jobs');
+      navigate('/admin/jobs');
     } else if (normalized.includes('employer')) {
-      navigate('/employers');
+      navigate('/admin/employers');
     } else if (normalized.includes('candidate')) {
-      navigate('/candidates');
+      navigate('/admin/candidates');
     } else if (normalized.includes('application')) {
-      navigate('/applications');
+      navigate('/admin/applications');
     } else if (normalized.includes('safety') || normalized.includes('report')) {
-      navigate('/trust-safety');
+      navigate('/admin/trust-safety');
     } else if (normalized.includes('support') || normalized.includes('ticket')) {
-      navigate('/support');
+      navigate('/admin/support');
     } else {
       setActionModal({
         title: `Queue: ${label}`,
@@ -328,7 +328,7 @@ export function Overview() {
             </div>
           </div>
           <button
-            onClick={() => navigate('/interviews')}
+            onClick={() => navigate('/admin/interviews')}
             className="flex items-center gap-1.5 rounded-xl bg-rose-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition-colors shadow-2xs shrink-0"
           >
             Mediate Dispute
@@ -393,13 +393,13 @@ export function Overview() {
               Quick Actions (DSH-8):
             </span>
             <button
-              onClick={() => navigate('/employers')}
+              onClick={() => navigate('/admin/employers')}
               className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-bold text-foreground hover:border-primary hover:text-primary transition-colors shadow-2xs"
             >
               <Building2 size={13} className="text-primary" /> Verify Employer
             </button>
             <button
-              onClick={() => navigate('/jobs')}
+              onClick={() => navigate('/admin/jobs')}
               className="flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-bold text-foreground hover:border-primary hover:text-primary transition-colors shadow-2xs"
             >
               <Briefcase size={13} className="text-primary" /> Approve Job
@@ -481,7 +481,7 @@ export function Overview() {
                     <td className="py-4 px-2 text-xs text-rose-600 font-bold">High (Suspicious Links)</td>
                     <td className="py-4 px-2">
                       <button
-                        onClick={() => navigate('/jobs')}
+                        onClick={() => navigate('/admin/jobs')}
                         className="border border-border hover:border-primary hover:text-primary transition-colors text-[11px] font-bold px-3 py-1.5 rounded-lg"
                       >
                         Review
@@ -495,7 +495,7 @@ export function Overview() {
                     <td className="py-4 px-2 text-xs text-amber-600 font-bold">Medium</td>
                     <td className="py-4 px-2">
                       <button
-                        onClick={() => navigate('/employers')}
+                        onClick={() => navigate('/admin/employers')}
                         className="border border-border hover:border-primary hover:text-primary transition-colors text-[11px] font-bold px-3 py-1.5 rounded-lg"
                       >
                         Review
@@ -659,7 +659,7 @@ export function Overview() {
                 <div className="font-display text-lg font-extrabold text-foreground">48 Tiers</div>
               </div>
               <button
-                onClick={() => navigate('/employer-billing')}
+                onClick={() => navigate('/admin/employer-billing')}
                 className="rounded-xl border border-border bg-background px-3.5 py-2 text-xs font-bold text-foreground hover:border-primary hover:text-primary transition-colors shadow-2xs"
               >
                 Manage Billing →

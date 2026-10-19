@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   CreditCard,
   Receipt,
@@ -53,6 +54,7 @@ const billingSections = [
 type BillingSection = typeof billingSections[number];
 
 export function EmployerBillingPage() {
+  const navigate = useNavigate();
   const [selectedSection, setSelectedSection] = useState<BillingSection>('Subscription tiers');
 
   // --- TAB 1: Subscription Tiers State ---
@@ -470,7 +472,7 @@ export function EmployerBillingPage() {
 
                     <div className="mt-6 border-t border-border pt-4">
                       <button
-                        onClick={() => setEditingPlan({ ...plan })}
+                        onClick={() => navigate(`/admin/employer-billing/tiers/${plan.id}`)}
                         className="w-full rounded-lg border border-border bg-muted/40 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
                       >
                         Edit Plan Parameters
@@ -775,7 +777,7 @@ export function EmployerBillingPage() {
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-1.5">
                             <button
-                              onClick={() => setSelectedInvoice(inv)}
+                              onClick={() => navigate(`/admin/employer-billing/invoices/${inv.id || inv.invoiceNumber}`)}
                               className="rounded border border-border bg-card px-2 py-1 text-[11px] font-semibold text-foreground hover:bg-muted"
                             >
                               View GST
@@ -838,7 +840,7 @@ export function EmployerBillingPage() {
                 </p>
               </div>
               <button
-                onClick={() => setIsIssueCreditOpen(true)}
+                onClick={() => navigate('/admin/employer-billing/adjustments/new')}
                 className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
               >
                 <Plus size={14} />

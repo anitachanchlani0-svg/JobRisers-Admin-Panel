@@ -11,7 +11,7 @@ export function NotFound() {
         </div>
         <h2 className="text-lg font-semibold text-foreground">Page Not Found</h2>
         <p className="mt-3 text-sm text-muted-foreground">The page you&apos;re looking for doesn&apos;t exist or has been moved.</p>
-        <Link to="/" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity">
+        <Link to="/admin/dashboard" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity">
           <ArrowLeft size={16} /> Back to Dashboard
         </Link>
       </section>

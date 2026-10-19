@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Calendar,
   Video,
@@ -40,12 +41,14 @@ import {
   AdminMeetingLinkRules,
   AdminInterviewPrepLink,
 } from '../mock-data';
+import { CurriculumBuilderView } from './CurriculumBuilder';
 
-type TopTab = 'All Interviews' | 'Disputes' | 'Meeting-link Rules' | 'Prep Content';
+type TopTab = 'All Interviews' | 'Disputes' | 'Meeting-link Rules' | 'Prep Content' | 'Curriculum Builder';
 type StatusFilter = 'All' | 'Scheduled & Confirmed' | 'Feedback Pending' | 'Completed' | 'No-show / Cancelled';
 type ViewMode = 'table' | 'calendar';
 
 export function InterviewsPage() {
+  const navigate = useNavigate();
   // Navigation
   const [activeTab, setActiveTab] = useState<TopTab>('All Interviews');
 
@@ -314,6 +317,7 @@ export function InterviewsPage() {
               ['Disputes', `${disputes.filter((d) => d.status === 'Pending Review' || d.status === 'Investigating').length} pending`],
               ['Meeting-link Rules', 'Rules'],
               ['Prep Content', `${prepLinks.length}`],
+              ['Curriculum Builder', 'EXT-3'],
             ] as const
           ).map(([tab, badge]) => (
             <button
@@ -560,8 +564,8 @@ export function InterviewsPage() {
                             <td className="py-3 px-3.5 text-right">
                               <button
                                 type="button"
-                                onClick={() => setSelectedInterview(interview)}
-                                className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-accent hover:border-border/80 transition-colors"
+                                onClick={() => navigate(`/admin/interviews/${interview.id}`)}
+                                className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-accent hover:border-border/80 transition-colors cursor-pointer"
                               >
                                 View Details
                               </button>
@@ -664,8 +668,8 @@ export function InterviewsPage() {
 
                               <button
                                 type="button"
-                                onClick={() => setSelectedInterview(session)}
-                                className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-accent transition-colors"
+                                onClick={() => navigate(`/admin/interviews/${session.id}`)}
+                                className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
                               >
                                 Details
                               </button>
@@ -831,11 +835,8 @@ export function InterviewsPage() {
                           <td className="py-3 px-3.5 text-right">
                             <button
                               type="button"
-                              onClick={() => {
-                                setSelectedDispute(dsp);
-                                setResolutionInput(dsp.resolutionNotes || '');
-                              }}
-                              className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-accent transition-colors"
+                              onClick={() => navigate(`/admin/interviews/disputes/${dsp.id}`)}
+                              className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-accent transition-colors cursor-pointer"
                             >
                               Review Dispute
                             </button>
@@ -1309,6 +1310,13 @@ export function InterviewsPage() {
                 </table>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* TAB 5: CURRICULUM BUILDER (EXT-3) */}
+        {activeTab === 'Curriculum Builder' && (
+          <div className="mt-5">
+            <CurriculumBuilderView />
           </div>
         )}
       </section>

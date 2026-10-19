@@ -1491,17 +1491,7 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                   </p>
                 </div>
                 <button
-                  onClick={() => {
-                    setEditingRole({
-                      id: `role-${Date.now()}`,
-                      title: '',
-                      categoryId: categoriesList[0]?.id || 'cat-1',
-                      categoryName: categoriesList[0]?.name || 'Technology & Software',
-                      inOnboarding: true,
-                      active: true,
-                    });
-                    setIsRoleModalOpen(true);
-                  }}
+                  onClick={() => navigate('/admin/master-data/roles/new')}
                   className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
                 >
                   <Plus size={15} />
@@ -1633,6 +1623,13 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                     <GitMerge size={14} className="text-primary" />
                     <span>Merge Skills</span>
                   </button>
+                  <button
+                    onClick={() => navigate('/admin/master-data/skills/new')}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs hover:bg-primary/90 transition-colors"
+                  >
+                    <Plus size={14} />
+                    <span>Add Skill</span>
+                  </button>
                 </div>
               </div>
 
@@ -1742,7 +1739,12 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                                 </button>
                               </div>
                             ) : (
-                              <span className="text-muted-foreground text-[11px] font-mono">Approved</span>
+                              <button
+                                onClick={() => navigate(`/admin/master-data/skills/${skill.id}`)}
+                                className="rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+                              >
+                                Edit
+                              </button>
                             )}
                           </td>
                         </tr>
@@ -1764,15 +1766,7 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                   </p>
                 </div>
                 <button
-                  onClick={() => {
-                    setEditingIndustry({
-                      id: `ind-${Date.now()}`,
-                      name: '',
-                      active: true,
-                      companyCount: 0,
-                    });
-                    setIsIndustryModalOpen(true);
-                  }}
+                  onClick={() => navigate('/admin/master-data/industries/new')}
                   className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
                 >
                   <Plus size={15} />
@@ -1821,10 +1815,7 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                         </td>
                         <td className="px-4 py-3 text-right">
                           <button
-                            onClick={() => {
-                              setEditingIndustry(ind);
-                              setIsIndustryModalOpen(true);
-                            }}
+                            onClick={() => navigate(`/admin/master-data/industries/${ind.id}`)}
                             className="rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
                           >
                             Edit
@@ -1849,16 +1840,7 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                   </p>
                 </div>
                 <button
-                  onClick={() => {
-                    setEditingLocation({
-                      id: `loc-${Date.now()}`,
-                      city: '',
-                      state: '',
-                      active: true,
-                      jobCount: 0,
-                    });
-                    setIsLocationModalOpen(true);
-                  }}
+                  onClick={() => navigate('/admin/master-data/locations/new')}
                   className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
                 >
                   <Plus size={15} />
@@ -1926,10 +1908,7 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                           </td>
                           <td className="px-4 py-3 text-right">
                             <button
-                              onClick={() => {
-                                setEditingLocation(loc);
-                                setIsLocationModalOpen(true);
-                              }}
+                              onClick={() => navigate(`/admin/master-data/locations/${loc.id}`)}
                               className="rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
                             >
                               Edit
@@ -2082,15 +2061,15 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                 {/* Editable Bucket Rows */}
                 <div className="space-y-2">
                   <div className="grid grid-cols-12 gap-3 text-[11px] font-semibold text-muted-foreground px-2">
-                    <span className="col-span-5">Bucket Label</span>
+                    <span className="col-span-4">Bucket Label</span>
                     <span className="col-span-3">Min LPA (₹)</span>
                     <span className="col-span-3">Max LPA (₹)</span>
-                    <span className="col-span-1 text-center">Del</span>
+                    <span className="col-span-2 text-right">Actions</span>
                   </div>
 
                   {salaryBuckets.map((bucket, bIdx) => (
                     <div key={bucket.id} className="grid grid-cols-12 gap-3 items-center bg-muted/30 p-2 rounded-xl border border-border/60">
-                      <div className="col-span-5">
+                      <div className="col-span-4">
                         <input
                           type="text"
                           value={bucket.label}
@@ -2131,7 +2110,14 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                           className="w-full rounded-lg border border-border bg-card px-2.5 py-1 text-xs text-foreground font-mono focus:border-primary focus:outline-none"
                         />
                       </div>
-                      <div className="col-span-1 text-center">
+                      <div className="col-span-2 flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => navigate(`/admin/master-data/salary-buckets/${bucket.id}`)}
+                          className="rounded-lg border border-border bg-card px-2 py-1 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+                          title="Edit Salary Bucket"
+                        >
+                          Edit
+                        </button>
                         <button
                           disabled={salaryBuckets.length <= 2}
                           onClick={() => {
@@ -2148,20 +2134,7 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
                   <button
-                    onClick={() => {
-                      const last = salaryBuckets[salaryBuckets.length - 1];
-                      const newMin = last ? (last.maxLpa === 999 ? 25 : last.maxLpa) : 0;
-                      const newMax = newMin + 5;
-                      setSalaryBuckets((prev) => [
-                        ...prev,
-                        {
-                          id: `sb-${Date.now()}`,
-                          label: `₹${newMin} - ₹${newMax} LPA`,
-                          minLpa: newMin,
-                          maxLpa: newMax,
-                        },
-                      ]);
-                    }}
+                    onClick={() => navigate('/admin/master-data/salary-buckets/new')}
                     className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors w-full sm:w-auto"
                   >
                     <Plus size={14} />
@@ -2194,16 +2167,7 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                   </p>
                 </div>
                 <button
-                  onClick={() => {
-                    setEditingBenefit({
-                      id: `ben-${Date.now()}`,
-                      label: '',
-                      icon: 'ShieldCheck',
-                      active: true,
-                      adoptionPercent: 0,
-                    });
-                    setIsBenefitModalOpen(true);
-                  }}
+                  onClick={() => navigate('/admin/master-data/benefits/new')}
                   className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
                 >
                   <Plus size={15} />
@@ -2242,10 +2206,7 @@ export function ModulePage({ module, title, eyebrow, description }: ModulePagePr
                         />
                       </button>
                       <button
-                        onClick={() => {
-                          setEditingBenefit(ben);
-                          setIsBenefitModalOpen(true);
-                        }}
+                        onClick={() => navigate(`/admin/master-data/benefits/${ben.id}`)}
                         className="rounded-lg border border-border bg-card p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                       >
                         <Edit2 size={13} />
@@ -3549,6 +3510,7 @@ interface ContentCMSViewProps {
 }
 
 export function ContentCMSView({ activeSection, triggerAppToast }: ContentCMSViewProps) {
+  const navigate = useNavigate();
   // -------------------------------------------------------------
   // TAB 1: LANDING PAGE STATE (CMS-1, CMS-9, CMS-10, CMS-18, etc.)
   // -------------------------------------------------------------
@@ -4987,23 +4949,7 @@ export function ContentCMSView({ activeSection, triggerAppToast }: ContentCMSVie
 
           <button
             onClick={() => {
-              setEditingArticle({
-                id: `art-${Date.now()}`,
-                title: '',
-                slug: '',
-                category: 'Career Strategy',
-                author: 'JobRisers Editorial',
-                excerpt: '',
-                coverImage: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&auto=format&fit=crop',
-                content: '',
-                seoTitle: '',
-                seoDescription: '',
-                views: 0,
-                publishedDate: new Date().toISOString().split('T')[0],
-                status: 'Draft',
-                featured: false,
-              });
-              setIsArticleModalOpen(true);
+              navigate('/admin/content/articles/new');
             }}
             className="flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-1.5 text-xs font-bold text-primary-foreground shadow-sm hover:opacity-90 shrink-0"
           >
@@ -5079,8 +5025,7 @@ export function ContentCMSView({ activeSection, triggerAppToast }: ContentCMSVie
                   </button>
                   <button
                     onClick={() => {
-                      setEditingArticle(article);
-                      setIsArticleModalOpen(true);
+                      navigate(`/admin/content/articles/${article.id}`);
                     }}
                     className="p-1.5 rounded-lg border border-border text-primary hover:bg-primary/10"
                     title="Edit article"
@@ -5179,20 +5124,7 @@ export function ContentCMSView({ activeSection, triggerAppToast }: ContentCMSVie
               </div>
               <button
                 onClick={() => {
-                  setEditingPolicy({
-                    id: `pol-${Date.now()}`,
-                    title: '',
-                    slug: '',
-                    version: 'v1.0',
-                    effectiveDate: new Date().toISOString().split('T')[0],
-                    lastUpdated: new Date().toISOString().split('T')[0],
-                    complianceTag: 'Compliance Document',
-                    mandatoryReconsent: false,
-                    status: 'Published',
-                    content: '# New Policy\\n\\nPolicy terms...',
-                    changelog: [{ version: 'v1.0', date: new Date().toISOString().split('T')[0], publisher: 'Legal Admin', notes: 'Initial draft.' }],
-                  });
-                  setIsPolicyModalOpen(true);
+                  navigate('/admin/content/policies/new');
                 }}
                 className="flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm hover:opacity-90"
               >
@@ -5262,8 +5194,7 @@ export function ContentCMSView({ activeSection, triggerAppToast }: ContentCMSVie
                           </button>
                           <button
                             onClick={() => {
-                              setEditingPolicy(policy);
-                              setIsPolicyModalOpen(true);
+                              navigate(`/admin/content/policies/${policy.id}`);
                             }}
                             className="p-1 rounded text-muted-foreground hover:text-foreground"
                           >
@@ -7454,6 +7385,7 @@ interface ResumeProViewProps {
 }
 
 export function ResumeProView({ activeSection, triggerAppToast }: ResumeProViewProps) {
+  const navigate = useNavigate();
   // --------------------------------------------------------------------------
   // TAB 1: TEMPLATES STATE (PRO-1, PRO-2, PRO-7, PRO-10, PRO-11, PRO-12, PRO-13)
   // --------------------------------------------------------------------------
@@ -7630,27 +7562,11 @@ export function ResumeProView({ activeSection, triggerAppToast }: ResumeProViewP
 
   // Handler: Open Add/Edit Template
   const handleOpenAddTemplate = () => {
-    setEditingTemplate(null);
-    setTemplateForm({
-      name: '',
-      version: 'v1.0',
-      tier: 'Standard',
-      atsValidated: false,
-      status: 'Published',
-      displayOrder: templates.length + 1,
-      description: '',
-      layout: 'single-column',
-      thumbnailBadge: 'Standard',
-      isRestricted: false,
-      tags: ['Modern'],
-    });
-    setIsAddEditTemplateModalOpen(true);
+    navigate('/admin/resume-pro/templates/new');
   };
 
   const handleOpenEditTemplate = (tmpl: AdminResumeTemplate) => {
-    setEditingTemplate(tmpl);
-    setTemplateForm({ ...tmpl });
-    setIsAddEditTemplateModalOpen(true);
+    navigate(`/admin/resume-pro/templates/${tmpl.id}`);
   };
 
   const handleSaveTemplate = () => {
@@ -8955,10 +8871,7 @@ export function ResumeProView({ activeSection, triggerAppToast }: ResumeProViewP
                   {/* Card Action */}
                   <div className="pt-4 mt-4 border-t border-border">
                     <button
-                      onClick={() => {
-                        setEditingPlan({ ...plan });
-                        setIsEditPlanModalOpen(true);
-                      }}
+                      onClick={() => navigate(`/admin/resume-pro/plans/${plan.id}`)}
                       className="w-full rounded-xl border border-border px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted inline-flex items-center justify-center gap-1"
                     >
                       <Edit2 size={12} /> Edit Plan Details
@@ -9517,7 +9430,7 @@ export function ResumeProView({ activeSection, triggerAppToast }: ResumeProViewP
                       </td>
                       <td className="py-3 px-4 text-right">
                         <button
-                          onClick={() => setSelectedSubscription(sub)}
+                          onClick={() => navigate(`/admin/resume-pro/subscriptions/${sub.id}`)}
                           className="rounded-lg border border-border px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-muted inline-flex items-center gap-1"
                         >
                           <Sliders size={12} /> Manage
@@ -9769,11 +9682,7 @@ export function ResumeProView({ activeSection, triggerAppToast }: ResumeProViewP
                           </td>
                           <td className="py-3 px-4 text-right">
                             <button
-                              onClick={() => {
-                                setSelectedRefundForReview(ref);
-                                setIsRejectMode(false);
-                                setRefundRejectionReason('');
-                              }}
+                              onClick={() => navigate(`/admin/resume-pro/refunds/${ref.id}`)}
                               className="rounded-lg border border-border px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-muted inline-flex items-center gap-1"
                             >
                               <Eye size={12} /> Review
@@ -13235,6 +13144,7 @@ interface TrustSafetyViewProps {
 }
 
 export function TrustSafetyView({ activeSection, triggerAppToast }: TrustSafetyViewProps) {
+  const navigate = useNavigate();
   // --------------------------------------------------------------------------
   // TAB 1: REPORTS STATE (TNS-1, TNS-4, TNS-6)
   // --------------------------------------------------------------------------
@@ -13333,7 +13243,7 @@ export function TrustSafetyView({ activeSection, triggerAppToast }: TrustSafetyV
   // TAB 1 ACTIONS (REPORTS & CASEWORK)
   // --------------------------------------------------------------------------
   const handleOpenCaseReview = (report: AdminSafetyIncidentReport) => {
-    setActiveReportCase(report);
+    navigate(`/admin/trust-safety/reports/${report.id || report.caseId}`);
   };
 
   const handleExecuteCaseResolution = () => {
@@ -14784,18 +14694,7 @@ export function TrustSafetyView({ activeSection, triggerAppToast }: TrustSafetyV
               <span>{isEmployerScreeningOpen ? 'Hide Sign-up Screening' : 'Employer Sign-up Screening (TNS-8)'}</span>
             </button>
             <button
-              onClick={() => {
-                setEditingRule(null);
-                setRuleFormData({
-                  pattern: '',
-                  category: 'Email Domains',
-                  matchType: 'Wildcard',
-                  enforcementScope: ['Candidate signup', 'Employer signup'],
-                  reason: '',
-                  status: 'Active',
-                });
-                setIsAddRuleModalOpen(true);
-              }}
+              onClick={() => navigate('/admin/trust-safety/blacklist/new')}
               className="flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-1.5 text-xs font-bold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
             >
               <Plus size={14} />
@@ -14956,18 +14855,7 @@ export function TrustSafetyView({ activeSection, triggerAppToast }: TrustSafetyV
                     </td>
                     <td className="py-3 px-4 text-right whitespace-nowrap space-x-1.5">
                       <button
-                        onClick={() => {
-                          setEditingRule(rule);
-                          setRuleFormData({
-                            pattern: rule.pattern,
-                            category: rule.category,
-                            matchType: rule.matchType,
-                            enforcementScope: rule.enforcementScope,
-                            reason: rule.reason,
-                            status: rule.status,
-                          });
-                          setIsAddRuleModalOpen(true);
-                        }}
+                        onClick={() => navigate(`/admin/trust-safety/blacklist/${rule.id}`)}
                         className="rounded-lg border border-border px-2 py-1 text-[11px] font-bold hover:bg-muted"
                       >
                         Edit

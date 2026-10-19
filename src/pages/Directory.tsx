@@ -800,7 +800,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
                 <button
                   type="button"
                   data-testid="button-open-candidate-page"
-                  onClick={() => navigate(`/candidates/${activeCandidate.id}`)}
+                  onClick={() => navigate(`/admin/candidates/${activeCandidate.id}`)}
                   className="flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity"
                 >
                   View Full Profile Page <ArrowRight size={14} />
@@ -1220,7 +1220,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
                     <button
                       onClick={() => {
                         const emp = employers.find((e) => e.company === 'Northstar Labs') || employers[0];
-                        navigate(`/employers/${emp.id}`);
+                        navigate(`/admin/employers/${emp.id}`);
                       }}
                       className="border border-border hover:border-primary hover:text-primary transition-colors text-xs font-semibold px-3 py-1.5 rounded-lg"
                     >
@@ -1238,7 +1238,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
                     <button
                       onClick={() => {
                         const emp = employers.find((e) => e.company === 'Cloudframe') || employers[1];
-                        navigate(`/employers/${emp.id}`);
+                        navigate(`/admin/employers/${emp.id}`);
                       }}
                       className="border border-border hover:border-primary hover:text-primary transition-colors text-xs font-semibold px-3 py-1.5 rounded-lg"
                     >
@@ -1269,7 +1269,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
                     className="py-4 px-2 text-xs text-primary font-medium hover:underline cursor-pointer"
                     onClick={() => {
                       const emp = employers.find((e) => e.company === 'Cloudframe') || employers[1];
-                      navigate(`/employers/${emp.id}`);
+                      navigate(`/admin/employers/${emp.id}`);
                     }}
                   >
                     2 Attachments (Inspect)
@@ -1327,7 +1327,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
           {kind === 'employers' && activeSection === 'Onboarding tracker' && (
             <OnboardingTrackerView
               employers={employers}
-              onInspect={(emp) => navigate(`/employers/${emp.id}`)}
+              onInspect={(emp) => navigate(`/admin/employers/${emp.id}`)}
               onNudge={(emp) => {
                 setActionModal({
                   title: 'Send Onboarding Reminder',
@@ -1388,7 +1388,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
                   setDecision(action);
                   setReason('');
                 }}
-                onRowClick={(job) => navigate(`/jobs/${job.id}`)}
+                onRowClick={(job) => navigate(`/admin/jobs/${job.id}`)}
               />
             </div>
           )}
@@ -1742,7 +1742,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
               issues={consistencyIssues}
               onInspect={(jobId) => {
                 const job = jobs.find((j) => j.id === jobId);
-                if (job) navigate(`/jobs/${job.id}`);
+                if (job) navigate(`/admin/jobs/${job.id}`);
               }}
               onResolve={(issueId) => {
                 setConsistencyIssues((prev) =>
@@ -2400,7 +2400,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
                 {kind === 'candidates' && (
                   <CandidatesTable
                     rows={list as AdminCandidate[]}
-                    onRowClick={(candidate) => navigate(`/candidates/${candidate.id}`)}
+                    onRowClick={(candidate) => navigate(`/admin/candidates/${candidate.id}`)}
                     selectedIds={selectedCandidateIds}
                     onToggleSelect={handleToggleSelectCandidate}
                     onToggleSelectAll={handleToggleSelectAllCandidates}
@@ -2410,7 +2410,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
                 {kind === 'employers' && (
                   <EmployersTable
                     rows={list as AdminEmployer[]}
-                    onRowClick={(employer) => navigate(`/employers/${employer.id}`)}
+                    onRowClick={(employer) => navigate(`/admin/employers/${employer.id}`)}
                     selectedIds={selectedEmployerIds}
                     onToggleSelect={handleToggleSelectEmployer}
                     onToggleSelectAll={handleToggleSelectAllEmployers}
@@ -2425,7 +2425,7 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
                       setDecision(action);
                       setReason('');
                     }}
-                    onRowClick={(job) => navigate(`/jobs/${job.id}`)}
+                    onRowClick={(job) => navigate(`/admin/jobs/${job.id}`)}
                     selectedIds={selectedJobIds}
                     onToggleSelect={handleToggleSelectJob}
                     onToggleSelectAll={handleToggleSelectAllJobs}
