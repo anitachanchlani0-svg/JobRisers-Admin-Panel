@@ -1,0 +1,1215 @@
+/* ==========================================================================
+   Screen 7 — Messages / Chat Page CSS
+   Exact match to reference screenshot specifications
+   ========================================================================== */
+
+.messages-page-root {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------------------------------
+   Top Navigation Bar
+   -------------------------------------------------------------------------- */
+.messages-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: #ffffff;
+  border-bottom: 1px solid #edf0f5;
+  height: 60px;
+}
+
+.messages-nav__container {
+  max-width: 1420px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.messages-nav__left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Logo */
+.messages-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.messages-nav__logo-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #0f172a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.messages-nav__logo-badge-text {
+  font-size: 14px;
+  font-weight: 900;
+  color: #3b82f6;
+  line-height: 1;
+}
+
+.messages-nav__logo-badge-sub {
+  position: absolute;
+  bottom: 2px;
+  font-size: 4.5px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.messages-nav__logo-text {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.messages-nav__logo-text--job {
+  color: #0f172a;
+}
+
+.messages-nav__logo-text--risers {
+  color: #4f46e5;
+}
+
+/* Search Bar */
+.messages-nav__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 380px;
+}
+
+.messages-nav__search-icon {
+  position: absolute;
+  left: 12px;
+  pointer-events: none;
+}
+
+.messages-nav__search-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 14px 0 34px;
+  background-color: #f1f4f9;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-size: 13px;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.messages-nav__search-input::placeholder {
+  color: #94a3b8;
+}
+
+.messages-nav__search-input:focus {
+  background-color: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+/* Right Navigation Links & User Profile */
+.messages-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.messages-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.messages-nav__link {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #334155;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.messages-nav__link:hover {
+  color: #4f46e5;
+}
+
+.messages-nav__user-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Notification Bell Indicator */
+.messages-nav__notif-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.messages-nav__notif-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 7px;
+  height: 7px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  border: 1.5px solid #ffffff;
+}
+
+/* User Profile Badge */
+.messages-nav__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.messages-nav__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.02em;
+}
+
+.messages-nav__username {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.messages-nav__user-chevron {
+  color: #64748b;
+  transition: transform 0.15s;
+}
+
+.messages-nav__user:hover .messages-nav__user-chevron {
+  transform: translateY(1px);
+}
+
+/* --------------------------------------------------------------------------
+   Three-Column Layout
+   -------------------------------------------------------------------------- */
+.messages-body {
+  padding: 18px 0 40px 0;
+}
+
+.messages-body__container {
+  max-width: 1420px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) 280px;
+  gap: 22px;
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT SIDEBAR
+   -------------------------------------------------------------------------- */
+.messages-sidebar-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.messages-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #475569;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.messages-menu__item:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.messages-menu__left-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.messages-menu__icon {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+/* Active Menu Item: Messages */
+.messages-menu__item--active {
+  background-color: #f0edff !important;
+  color: #4f46e5 !important;
+  font-weight: 600;
+}
+
+.messages-menu__icon--active {
+  color: #4f46e5 !important;
+}
+
+/* Red Unread Count Badge in Sidebar */
+.messages-menu__unread-badge {
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 700;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Upgrade to Premium Card */
+.messages-upgrade-card {
+  margin-top: 110px;
+  background-color: #f8faff;
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: left;
+}
+
+.messages-upgrade-card__icon {
+  width: 22px;
+  height: 22px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.messages-upgrade-card__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e1b4b;
+  margin: 0 0 3px 0;
+}
+
+.messages-upgrade-card__desc {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #64748b;
+  margin: 0 0 12px 0;
+}
+
+.messages-upgrade-card__btn {
+  width: 100%;
+  padding: 6px 0;
+  background-color: #ffffff;
+  border: 1px solid #4f46e5;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4f46e5;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.messages-upgrade-card__btn:hover {
+  background-color: #4f46e5;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   CENTER COLUMN — MESSAGING DASHBOARD & WORKSPACE
+   -------------------------------------------------------------------------- */
+.messages-main-content {
+  min-width: 0;
+}
+
+/* Header */
+.messages-header {
+  margin-bottom: 12px;
+}
+
+.messages-header__title {
+  font-size: 23px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  margin: 0 0 3px 0;
+}
+
+.messages-header__subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 12px 0;
+}
+
+/* Filter Tabs */
+.messages-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.messages-tab {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 4.5px 13px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.messages-tab:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.messages-tab--active {
+  background-color: #eef2ff !important;
+  color: #4f46e5 !important;
+  border-color: #e0e7ff !important;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Workspace Card (Split View: Inbox List + Chat Pane)
+   -------------------------------------------------------------------------- */
+.messages-workspace {
+  background-color: #ffffff;
+  border: 1px solid #edf0f5;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  height: 630px;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Inbox Column (Left Sub-column)
+   -------------------------------------------------------------------------- */
+.messages-inbox-pane {
+  border-right: 1px solid #edf0f5;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Search Bar */
+.messages-inbox__search-bar {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.messages-inbox__search-input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  height: 32px;
+  padding: 0 8px 0 28px;
+}
+
+.messages-inbox__search-icon {
+  position: absolute;
+  left: 8px;
+  pointer-events: none;
+}
+
+.messages-inbox__search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 12px;
+  color: #0f172a;
+}
+
+.messages-inbox__search-input::placeholder {
+  color: #94a3b8;
+}
+
+.messages-inbox__filter-btn {
+  width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.messages-inbox__filter-btn:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* Conversation Items List */
+.messages-inbox__list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.messages-inbox-item {
+  display: flex;
+  gap: 10px;
+  padding: 11px 13px;
+  border-bottom: 1px solid #f8fafc;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.messages-inbox-item:hover {
+  background-color: #fafbfc;
+}
+
+.messages-inbox-item--selected {
+  background-color: #f8faff !important;
+  border-left-color: #4f46e5 !important;
+}
+
+.messages-inbox-item__logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.messages-inbox-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.messages-inbox-item__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1px;
+}
+
+.messages-inbox-item__company {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.messages-inbox-item__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.messages-inbox-item__time {
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+.messages-inbox-item__unread-dot {
+  background-color: #ef4444;
+  color: #ffffff;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  font-size: 9.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.messages-inbox-item__role {
+  font-size: 11.5px;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.messages-inbox-item__preview {
+  font-size: 11px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* --------------------------------------------------------------------------
+   Active Chat Pane (Right Sub-column)
+   -------------------------------------------------------------------------- */
+.messages-chat-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background-color: #ffffff;
+}
+
+/* Chat Header */
+.messages-chat__header {
+  height: 54px;
+  padding: 0 16px;
+  border-bottom: 1px solid #edf0f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.messages-chat__header-info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.messages-chat__header-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12.5px;
+  flex-shrink: 0;
+}
+
+.messages-chat__header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.messages-chat__header-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.messages-chat__verified-icon {
+  flex-shrink: 0;
+}
+
+.messages-chat__header-role {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.messages-chat__more-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.messages-chat__more-btn:hover {
+  background-color: #f1f5f9;
+}
+
+/* Chat Messages Area */
+.messages-chat__messages-list {
+  flex: 1;
+  padding: 16px 18px;
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Centered Date Pill */
+.messages-chat__date-pill-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.messages-chat__date-pill {
+  background-color: #f1f5f9;
+  color: #64748b;
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 2.5px 12px;
+  border-radius: 12px;
+}
+
+/* Message Rows */
+.messages-chat-row {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+
+.messages-chat-row--incoming {
+  justify-content: flex-start;
+}
+
+.messages-chat-row--outgoing {
+  justify-content: flex-end;
+}
+
+.messages-chat-row__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.messages-chat-row__bubble-wrap {
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-chat-row--outgoing .messages-chat-row__bubble-wrap {
+  align-items: flex-end;
+}
+
+.messages-chat-row__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+  font-size: 11px;
+}
+
+.messages-chat-row__sender {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.messages-chat-row__time {
+  color: #94a3b8;
+}
+
+/* Bubbles */
+.messages-chat-bubble {
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-size: 12px;
+  line-height: 1.48;
+  color: #1e293b;
+}
+
+.messages-chat-bubble--incoming {
+  background-color: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-top-left-radius: 2px;
+}
+
+.messages-chat-bubble--outgoing {
+  background-color: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-top-right-radius: 2px;
+}
+
+.messages-chat-bubble__para {
+  margin: 0 0 6px 0;
+}
+
+.messages-chat-bubble__para:last-child {
+  margin-bottom: 0;
+}
+
+/* Embedded Meet Card */
+.messages-meet-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.messages-meet-card__left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.messages-meet-card__icon {
+  flex-shrink: 0;
+}
+
+.messages-meet-card__info {
+  min-width: 0;
+}
+
+.messages-meet-card__title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.messages-meet-card__link {
+  font-size: 11px;
+  color: #2563eb;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.messages-meet-card__link:hover {
+  text-decoration: underline;
+}
+
+.messages-meet-card__external-link {
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.messages-meet-card__external-link:hover {
+  color: #2563eb;
+}
+
+/* Bottom Composer */
+.messages-chat__composer {
+  height: 50px;
+  padding: 0 14px;
+  border-top: 1px solid #edf0f5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #ffffff;
+  flex-shrink: 0;
+}
+
+.messages-chat__action-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.messages-chat__action-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.messages-chat__input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 12.5px;
+  color: #0f172a;
+  background: transparent;
+}
+
+.messages-chat__input::placeholder {
+  color: #94a3b8;
+}
+
+.messages-chat__send-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #3b49df;
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  flex-shrink: 0;
+}
+
+.messages-chat__send-btn:hover {
+  background-color: #2f3ab2;
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT SIDEBAR — COMPANY & CONVERSATION DETAILS
+   -------------------------------------------------------------------------- */
+.messages-sidebar-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.messages-details-card {
+  background-color: #ffffff;
+  border: 1px solid #edf0f5;
+  border-radius: 10px;
+  padding: 14px 13px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Company Header */
+.messages-details__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.messages-details__company-info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.messages-details__logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.messages-details__name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.messages-details__company-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.messages-details__verified-icon {
+  flex-shrink: 0;
+}
+
+.messages-details__role {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.messages-details__view-job-btn {
+  padding: 4px 10px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.messages-details__view-job-btn:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* Job Metadata */
+.messages-details__job-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.messages-details__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  color: #475569;
+}
+
+.messages-details__rupee-icon {
+  font-size: 12px;
+  font-weight: 700;
+  width: 14px;
+  text-align: center;
+  color: #64748b;
+}
+
+/* Section Title */
+.messages-details__section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+}
+
+/* Table Details */
+.messages-details__table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.messages-details__table-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+}
+
+.messages-details__table-label {
+  color: #64748b;
+}
+
+.messages-details__table-val {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.messages-details__status-badge {
+  background-color: #dcfce7;
+  color: #15803d;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* Notifications Checkboxes */
+.messages-details__notif-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.messages-details__notif-row:last-child {
+  margin-bottom: 0;
+}
+
+.messages-details__notif-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.messages-details__notif-sub {
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+.messages-details__checkbox {
+  width: 14px;
+  height: 14px;
+  accent-color: #3b49df;
+  cursor: pointer;
+}
+
+/* Actions List */
+.messages-details__actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.messages-details__action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: left;
+  transition: color 0.15s;
+}
+
+.messages-details__action-btn:hover {
+  color: #0f172a;
+}
+
+.messages-details__action-btn--danger {
+  color: #ef4444;
+}
+
+.messages-details__action-btn--danger:hover {
+  color: #dc2626;
+}
+
+/* Tip Card at Bottom */
+.messages-tip-card {
+  background-color: #f8fafc;
+  border: 1px solid #edf0f5;
+  border-radius: 10px;
+  padding: 12px 12px;
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+
+.messages-tip-card__icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.messages-tip-card__title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.messages-tip-card__body {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: #64748b;
+}
+
+/* --------------------------------------------------------------------------
+   Toast
+   -------------------------------------------------------------------------- */
+.messages-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #1e1b4b;
+  color: #ffffff;
+  padding: 9px 15px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: toastSlideUp 0.2s ease-out;
+}
+
+@keyframes toastSlideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+@media (max-width: 1150px) {
+  .messages-body__container {
+    grid-template-columns: 190px 1fr;
+  }
+  .messages-sidebar-right {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .messages-body__container {
+    grid-template-columns: 1fr;
+  }
+  .messages-sidebar-left {
+    display: none;
+  }
+  .messages-workspace {
+    grid-template-columns: 1fr;
+  }
+  .messages-inbox-pane {
+    display: none;
+  }
+  .messages-nav__search {
+    display: none;
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Send,
   Bookmark,
@@ -104,10 +105,15 @@ export default function JobDetailsPage() {
           </nav>
 
           {/* Right Logged-in User */}
-          <div className="jd-nav__user" id="jd-user-profile">
+          <Link
+            to="/settings"
+            className="jd-nav__user"
+            id="jd-user-profile"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
             <div className="jd-nav__avatar">AJ</div>
             <span className="jd-nav__username">Alex Johnson</span>
-          </div>
+          </Link>
         </div>
       </header>
 

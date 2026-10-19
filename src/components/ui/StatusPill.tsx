@@ -15,6 +15,9 @@ const EXACT_STATUS_STYLES: Record<string, string> = {
   completed: 'bg-emerald-50 text-emerald-700',
   confirmed: 'bg-emerald-50 text-emerald-700',
   reviewed: 'bg-emerald-50 text-emerald-700',
+  healthy: 'bg-emerald-50 text-emerald-700',
+  pinned: 'bg-emerald-50 text-emerald-700',
+  paid: 'bg-emerald-50 text-emerald-700',
 
   // Amber / Warning
   pending: 'bg-amber-50 text-amber-800',
@@ -35,6 +38,8 @@ const EXACT_STATUS_STYLES: Record<string, string> = {
   visible: 'bg-amber-50 text-amber-800',
   'waiting on customer': 'bg-amber-50 text-amber-800',
   medium: 'bg-amber-50 text-amber-800',
+  grandfathered: 'bg-amber-50 text-amber-800',
+  'in dispute': 'bg-amber-50 text-amber-800',
 
   // Rose / Destructive
   inactive: 'bg-rose-50 text-rose-700',
@@ -53,6 +58,9 @@ const EXACT_STATUS_STYLES: Record<string, string> = {
   high: 'bg-rose-50 text-rose-700',
   critical: 'bg-rose-50 text-rose-700',
   unresolved: 'bg-rose-50 text-rose-700',
+  suppressed: 'bg-rose-50 text-rose-700',
+  alert: 'bg-rose-50 text-rose-700',
+  failed: 'bg-rose-50 text-rose-700',
 
   // Blue / Info
   applied: 'bg-blue-50 text-blue-700',
@@ -64,11 +72,13 @@ const EXACT_STATUS_STYLES: Record<string, string> = {
   logged: 'bg-blue-50 text-blue-700',
   'updated today': 'bg-blue-50 text-blue-700',
   low: 'bg-blue-50 text-blue-700',
+  boosted: 'bg-blue-50 text-blue-700',
 
   // Neutral / Slate
   closed: 'bg-slate-100 text-slate-700',
   dismissed: 'bg-slate-100 text-slate-700',
   archived: 'bg-slate-100 text-slate-700',
+  refunded: 'bg-slate-100 text-slate-700',
 };
 
 export function StatusPill({ value }: StatusPillProps) {

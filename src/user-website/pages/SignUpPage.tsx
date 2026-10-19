@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import '../styles/signup.css'
 
 export default function SignUpPage() {
@@ -74,9 +75,9 @@ export default function SignUpPage() {
           {/* Right Auth Link */}
           <div className="signup-nav__auth">
             <span className="signup-nav__auth-label">Already have an account?</span>
-            <a href="/admin/login" className="signup-nav__signin-btn" id="signup-signin-btn">
+            <Link to="/login" className="signup-nav__signin-btn" id="signup-signin-btn">
               Sign in
-            </a>
+            </Link>
           </div>
         </div>
       </header>

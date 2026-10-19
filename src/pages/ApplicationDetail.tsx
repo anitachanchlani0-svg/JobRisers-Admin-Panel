@@ -16,9 +16,23 @@ import {
   MapPin,
   Calendar,
   Layers,
+  Send,
+  AlertCircle,
+  Edit2,
+  ListOrdered,
+  HelpCircle,
+  Sparkles,
+  Lock,
+  ShieldCheck,
+  ShieldAlert,
+  Eye,
+  EyeOff,
+  Phone,
+  Mail,
 } from 'lucide-react';
 import { adminApplications, type AdminApplicationDetail } from '@/mock-data';
 import { Avatar, StatusPill } from '@/components/ui';
+import { Modal } from '@/components/ui/Modal';
 
 const pipelineStages = ['Applied', 'Screening', 'Interview', 'Offered', 'Rejected'];
 
@@ -31,9 +45,80 @@ export function ApplicationDetailPage() {
   const application = applicationsList.find((a) => a.id === id) || applicationsList[0];
   const [currentStage, setCurrentStage] = useState<string>(application?.stage || 'Applied');
 
+  // Step X of Y & Round X of Y state
+  const [currentStep, setCurrentStep] = useState<number>(application?.currentStep || 1);
+  const [totalSteps, setTotalSteps] = useState<number>(application?.totalSteps || 5);
+  const [currentRound, setCurrentRound] = useState<number>(application?.currentRound || 1);
+  const [totalRounds, setTotalRounds] = useState<number>(application?.totalRounds || 3);
+
+  // Modals state
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isResendModalOpen, setIsResendModalOpen] = useState(false);
+  const [isEditStepModalOpen, setIsEditStepModalOpen] = useState(false);
+  const [isEditRoundModalOpen, setIsEditRoundModalOpen] = useState(false);
+
+  // Form temporary values
+  const [tempStep, setTempStep] = useState<number>(1);
+  const [tempTotalSteps, setTempTotalSteps] = useState<number>(5);
+  const [stepError, setStepError] = useState<string | null>(null);
+
+  const [tempRound, setTempRound] = useState<number>(1);
+  const [tempTotalRounds, setTempTotalRounds] = useState<number>(3);
+  const [roundError, setRoundError] = useState<string | null>(null);
+
+  // Candidate PII Masking & Authorized Unmask Workflow (APP-10 / XMOD-3)
+  const [isPiiUnmasked, setIsPiiUnmasked] = useState(false);
+  const [unmaskModalOpen, setUnmaskModalOpen] = useState(false);
+  const [unmaskJustification, setUnmaskJustification] = useState('');
+  const [unmaskError, setUnmaskError] = useState('');
+  const [piiAuditLogs, setPiiAuditLogs] = useState<
+    { id: string; action: string; timestamp: string; actor: string; reason: string }[]
+  >([]);
+
+  // Toast / feedback notification
+  const [toastNotice, setToastNotice] = useState<string | null>(null);
+
+  const handleConfirmUnmask = () => {
+    const trimmed = unmaskJustification.trim();
+    if (!trimmed || trimmed.length < 5) {
+      setUnmaskError('A valid business justification (min 5 characters) is required under DPDP Act 2023.');
+      return;
+    }
+    const timestamp = new Date().toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    });
+    const newEntry = {
+      id: `pii-aud-${Date.now()}`,
+      action: 'Candidate PII Unmask Authorized',
+      timestamp: `Today, ${timestamp}`,
+      actor: 'Admin: Anita Chanchlani (Operations Admin)',
+      reason: trimmed,
+    };
+    setPiiAuditLogs((prev) => [newEntry, ...prev]);
+    setIsPiiUnmasked(true);
+    setUnmaskModalOpen(false);
+    setUnmaskJustification('');
+    setUnmaskError('');
+    showToast('Candidate contact details unmasked. Access event logged for DPDP compliance.');
+  };
+
+  const showToast = (msg: string) => {
+    setToastNotice(msg);
+    setTimeout(() => setToastNotice(null), 4000);
+  };
+
   useEffect(() => {
     if (application) {
       setCurrentStage(application.stage || 'Applied');
+      setCurrentStep(application.currentStep || 1);
+      setTotalSteps(application.totalSteps || 5);
+      setCurrentRound(application.currentRound || 1);
+      setTotalRounds(application.totalRounds || 3);
     }
   }, [application]);
 
@@ -61,12 +146,148 @@ export function ApplicationDetailPage() {
         app.id === application.id ? { ...app, stage: newStage, status: newStage } : app
       )
     );
+    showToast(`Application stage changed to ${newStage}.`);
+  };
+
+  // Withdraw Action Handler
+  const handleConfirmWithdraw = () => {
+    const updatedStage = 'Withdrawn';
+    setCurrentStage(updatedStage);
+
+    const newTimelineEvent = {
+      event: 'Application formally withdrawn by Admin for dispute resolution',
+      timestamp: 'Just now',
+      actor: 'Admin: Operations Caseworker',
+    };
+
+    setApplicationsList((prev) =>
+      prev.map((app) =>
+        app.id === application.id
+          ? {
+              ...app,
+              stage: updatedStage,
+              status: updatedStage,
+              timeline: [newTimelineEvent, ...(app.timeline || [])],
+            }
+          : app
+      )
+    );
+
+    setIsWithdrawModalOpen(false);
+    showToast('Application has been successfully withdrawn. Parties notified.');
+  };
+
+  // Re-send Notification Action Handler
+  const handleConfirmResendNotification = () => {
+    const newTimelineEvent = {
+      event: `Application milestone notification re-dispatched for stage: ${currentStage}`,
+      timestamp: 'Just now',
+      actor: 'Admin: Operations Caseworker',
+    };
+
+    setApplicationsList((prev) =>
+      prev.map((app) =>
+        app.id === application.id
+          ? {
+              ...app,
+              timeline: [newTimelineEvent, ...(app.timeline || [])],
+            }
+          : app
+      )
+    );
+
+    setIsResendModalOpen(false);
+    showToast(`Milestone update notification re-sent to ${application.candidateEmailMasked}.`);
+  };
+
+  // Step X of Y Save Handler
+  const handleSaveStep = () => {
+    if (tempStep < 1 || tempTotalSteps < 1) {
+      setStepError('Step values must be 1 or greater.');
+      return;
+    }
+    if (tempStep > tempTotalSteps) {
+      setStepError(`Current step (${tempStep}) cannot exceed total steps (${tempTotalSteps}).`);
+      return;
+    }
+
+    setCurrentStep(tempStep);
+    setTotalSteps(tempTotalSteps);
+
+    const newTimelineEvent = {
+      event: `Hiring pipeline progress corrected: Step ${tempStep} of ${tempTotalSteps}`,
+      timestamp: 'Just now',
+      actor: 'Admin: Operations Caseworker',
+    };
+
+    setApplicationsList((prev) =>
+      prev.map((app) =>
+        app.id === application.id
+          ? {
+              ...app,
+              currentStep: tempStep,
+              totalSteps: tempTotalSteps,
+              timeline: [newTimelineEvent, ...(app.timeline || [])],
+            }
+          : app
+      )
+    );
+
+    setIsEditStepModalOpen(false);
+    setStepError(null);
+    showToast(`Hiring pipeline progress updated to Step ${tempStep} of ${tempTotalSteps}.`);
+  };
+
+  // Round X of Y Save Handler
+  const handleSaveRound = () => {
+    if (tempRound < 1 || tempTotalRounds < 1) {
+      setRoundError('Round values must be 1 or greater.');
+      return;
+    }
+    if (tempRound > tempTotalRounds) {
+      setRoundError(`Current round (${tempRound}) cannot exceed total rounds (${tempTotalRounds}).`);
+      return;
+    }
+
+    setCurrentRound(tempRound);
+    setTotalRounds(tempTotalRounds);
+
+    const newTimelineEvent = {
+      event: `Interview progress corrected: Round ${tempRound} of ${tempTotalRounds}`,
+      timestamp: 'Just now',
+      actor: 'Admin: Operations Caseworker',
+    };
+
+    setApplicationsList((prev) =>
+      prev.map((app) =>
+        app.id === application.id
+          ? {
+              ...app,
+              currentRound: tempRound,
+              totalRounds: tempTotalRounds,
+              timeline: [newTimelineEvent, ...(app.timeline || [])],
+            }
+          : app
+      )
+    );
+
+    setIsEditRoundModalOpen(false);
+    setRoundError(null);
+    showToast(`Interview progress updated to Round ${tempRound} of ${tempTotalRounds}.`);
   };
 
   const currentStageIndex = pipelineStages.indexOf(currentStage);
 
   return (
     <div className="space-y-6">
+      {/* Toast Notification Banner */}
+      {toastNotice && (
+        <div className="flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2.5 text-xs font-semibold text-primary shadow-sm animate-in fade-in duration-200">
+          <CheckCircle2 size={16} className="shrink-0" />
+          <span>{toastNotice}</span>
+        </div>
+      )}
+
       {/* Top Back Navigation Bar */}
       <div className="flex items-center justify-between">
         <Link
@@ -80,7 +301,7 @@ export function ApplicationDetailPage() {
         <span className="text-[10px] font-mono text-muted-foreground">Application ID: {application.id}</span>
       </div>
 
-      {/* Main Header Card */}
+      {/* Main Header Card with Dispute & Moderation Actions (APP-2) */}
       <div className="rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5 min-w-0">
@@ -100,129 +321,178 @@ export function ApplicationDetailPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0 flex-wrap">
-            <span className="text-xs text-muted-foreground font-medium hidden sm:inline mr-1">
-              Move to:
-            </span>
-            {currentStage !== 'Screening' && (
+          {/* Dispute Handling Actions (APP-2) */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => setIsResendModalOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground shadow-sm hover:bg-muted transition-colors"
+            >
+              <Send size={13} className="text-primary" />
+              <span>Re-send Notification</span>
+            </button>
+
+            {currentStage !== 'Withdrawn' ? (
               <button
-                type="button"
-                onClick={() => handleStageChange('Screening')}
-                className="rounded-xl bg-blue-50 border border-blue-200/70 px-3 py-1.5 text-[11px] font-bold text-blue-700 hover:bg-blue-100 transition-colors"
+                onClick={() => setIsWithdrawModalOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 shadow-sm hover:bg-rose-100 transition-colors"
               >
-                Screening
+                <XCircle size={13} />
+                <span>Withdraw Application</span>
               </button>
-            )}
-            {currentStage !== 'Interview' && (
-              <button
-                type="button"
-                onClick={() => handleStageChange('Interview')}
-                className="rounded-xl bg-purple-50 border border-purple-200/70 px-3 py-1.5 text-[11px] font-bold text-purple-700 hover:bg-purple-100 transition-colors"
-              >
-                Interview
-              </button>
-            )}
-            {currentStage !== 'Offered' && (
-              <button
-                type="button"
-                onClick={() => handleStageChange('Offered')}
-                className="rounded-xl bg-emerald-50 border border-emerald-200/70 px-3 py-1.5 text-[11px] font-bold text-emerald-700 hover:bg-emerald-100 transition-colors"
-              >
-                Offer
-              </button>
-            )}
-            {currentStage !== 'Rejected' && (
-              <button
-                type="button"
-                onClick={() => handleStageChange('Rejected')}
-                className="rounded-xl bg-rose-50 border border-rose-200/70 px-3 py-1.5 text-[11px] font-bold text-rose-700 hover:bg-rose-100 transition-colors"
-              >
-                Reject
-              </button>
+            ) : (
+              <span className="rounded-xl bg-slate-100 border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600">
+                Application Withdrawn
+              </span>
             )}
           </div>
         </div>
       </div>
 
-      {/* 1. Quick Stats Strip */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-xl border border-border bg-card p-4 shadow-sm space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-            Current Stage
-          </div>
-          <div className="font-display text-lg font-extrabold text-foreground truncate">
-            {currentStage}
-          </div>
-          <div className="text-[10px] text-muted-foreground">Active funnel step</div>
-        </div>
-
-        <div className="rounded-xl border border-border bg-card p-4 shadow-sm space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-            Submission Date
-          </div>
-          <div className="font-display text-lg font-extrabold text-foreground truncate">
-            {application.appliedDate}
-          </div>
-          <div className="text-[10px] text-muted-foreground">Platform verified</div>
-        </div>
-
-        <div className="rounded-xl border border-border bg-card p-4 shadow-sm space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-            ATS Match
-          </div>
-          <div className="font-display text-lg font-extrabold text-emerald-700">
-            {application.resume.atsScore}%
-          </div>
-          <div className="text-[10px] text-muted-foreground">Job keyword pairing</div>
-        </div>
-
-        <div className="rounded-xl border border-border bg-card p-4 shadow-sm space-y-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-            Screening Qs
-          </div>
-          <div className="font-display text-lg font-extrabold text-foreground">
-            {application.screeningQuestions?.length || 0} Answers
-          </div>
-          <div className="text-[10px] text-muted-foreground">Completed responses</div>
-        </div>
-      </section>
-
-      {/* 2. Interactive Hiring Pipeline Stepper */}
-      <section className="rounded-2xl border border-border bg-card p-5 space-y-3.5 shadow-sm">
+      {/* Multi-Step Pipeline Fields: Step X of Y & Round X of Y (APP-5) */}
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Layers size={15} className="text-primary" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-              Hiring Pipeline Progress
-            </h3>
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Pipeline Milestones & Progress (APP-5)
+            </h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Multi-step recruitment pipeline fields. Admins can view and correct values during dispute resolution.
+            </p>
           </div>
-          <span className="text-[11px] font-semibold text-primary">
-            Step {Math.max(1, currentStageIndex + 1)} of 5
+          <span className="rounded bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+            Dispute Correction Enabled
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* 1. Step X of Y: Overall Hiring Pipeline */}
+          <div className="rounded-xl border border-border bg-muted/20 p-4 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Overall Hiring Pipeline
+                </span>
+                <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-extrabold text-primary">
+                  Step {currentStep} of {totalSteps}
+                </span>
+              </div>
+              <h3 className="mt-2 text-sm font-bold text-foreground">
+                Recruitment Stage: Step {currentStep} of {totalSteps}
+              </h3>
+              <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                Represents candidate progress across the company's full recruitment lifecycle (Application → Screening → Interview → Offer → Hired).
+              </p>
+
+              {/* Visual Progress Bar */}
+              <div className="mt-3 w-full bg-border rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.min(100, (currentStep / totalSteps) * 100)}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
+              <span className="text-[10px] text-muted-foreground">
+                Hiring lifecycle completion: {Math.round((currentStep / totalSteps) * 100)}%
+              </span>
+              <button
+                onClick={() => {
+                  setTempStep(currentStep);
+                  setTempTotalSteps(totalSteps);
+                  setStepError(null);
+                  setIsEditStepModalOpen(true);
+                }}
+                className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+              >
+                <Edit2 size={12} className="text-primary" />
+                <span>Correct Step</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 2. Round X of Y: Interview Rounds */}
+          <div className="rounded-xl border border-border bg-muted/20 p-4 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Interview Stage Loop
+                </span>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-extrabold text-emerald-800">
+                  Round {currentRound} of {totalRounds}
+                </span>
+              </div>
+              <h3 className="mt-2 text-sm font-bold text-foreground">
+                Interview Phase: Round {currentRound} of {totalRounds}
+              </h3>
+              <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                Represents candidate progression across sequential technical interviews, live coding sessions, and hiring manager evaluation loops.
+              </p>
+
+              {/* Visual Progress Bar */}
+              <div className="mt-3 w-full bg-border rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-emerald-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.min(100, (currentRound / totalRounds) * 100)}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
+              <span className="text-[10px] text-muted-foreground">
+                Interview panel completion: {Math.round((currentRound / totalRounds) * 100)}%
+              </span>
+              <button
+                onClick={() => {
+                  setTempRound(currentRound);
+                  setTempTotalRounds(totalRounds);
+                  setRoundError(null);
+                  setIsEditRoundModalOpen(true);
+                }}
+                className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+              >
+                <Edit2 size={12} className="text-emerald-700" />
+                <span>Correct Round</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Interactive Pipeline Stages Stepper */}
+      <section className="rounded-2xl border border-border bg-card p-5 space-y-4 shadow-sm">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Recruitment Funnel Stage
+          </h2>
+          <span className="text-xs text-muted-foreground">Click a stage to update status</span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {pipelineStages.map((stage, idx) => {
-            const isCompleted = currentStage !== 'Rejected' && idx < currentStageIndex;
+            const isCompleted = idx < currentStageIndex;
             const isCurrent = stage === currentStage;
-            const isRejected = currentStage === 'Rejected' && stage === 'Rejected';
+            const isRejected = stage === 'Rejected' && currentStage === 'Rejected';
 
             return (
               <button
                 key={stage}
                 type="button"
                 onClick={() => handleStageChange(stage)}
-                className={`flex flex-col items-center justify-center p-3 rounded-xl text-center border transition-all last:col-span-2 sm:last:col-span-1 ${
+                className={`relative flex flex-col items-center justify-center p-3 rounded-xl border text-center transition-all ${
                   isCurrent
-                    ? 'border-primary bg-primary/10 text-primary font-bold shadow-2xs'
+                    ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm ring-1 ring-primary'
                     : isCompleted
-                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800 font-semibold'
+                    ? 'border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold'
                     : isRejected
-                    ? 'border-rose-300 bg-rose-50 text-rose-700 font-bold'
-                    : 'border-border/60 bg-muted/20 text-muted-foreground hover:bg-muted/50'
+                    ? 'border-rose-300 bg-rose-50 text-rose-800 font-bold'
+                    : 'border-border bg-muted/20 text-muted-foreground hover:bg-muted/40'
                 }`}
               >
-                <span className="text-[11px] sm:text-[10px] uppercase tracking-wider font-semibold">
+                <span className="text-[10px] uppercase font-bold tracking-wider opacity-60">
+                  Stage {idx + 1}
+                </span>
+                <span className="text-xs font-extrabold mt-0.5 truncate w-full">
                   {stage}
                 </span>
                 {isCompleted && <CheckCircle2 size={13} className="mt-1 text-emerald-600" />}
@@ -237,15 +507,65 @@ export function ApplicationDetailPage() {
       {/* 3. Candidate & Job Summary */}
       <section className="rounded-2xl border border-border bg-card p-5 space-y-4 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          {/* Candidate Profile Info */}
-          <div className="space-y-1.5 rounded-xl bg-muted/25 p-3.5 border border-border/50">
-            <div className="flex items-center gap-1.5 text-primary font-bold text-[11px] uppercase tracking-wider">
-              <User size={13} /> Candidate Profile
+          {/* Candidate Profile Info with PII Protection (APP-10) */}
+          <div className="space-y-2 rounded-xl bg-muted/25 p-3.5 border border-border/50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 text-primary font-bold text-[11px] uppercase tracking-wider">
+                <User size={13} /> Candidate Profile
+              </div>
+              {!isPiiUnmasked ? (
+                <button
+                  type="button"
+                  data-testid="button-unmask-candidate-pii"
+                  onClick={() => setUnmaskModalOpen(true)}
+                  className="inline-flex items-center gap-1 rounded-lg border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary hover:bg-primary/20 transition-colors shadow-2xs"
+                >
+                  <Lock size={11} /> Unmask PII
+                </button>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700">
+                    <ShieldCheck size={11} /> Unmasked (Audited)
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setIsPiiUnmasked(false)}
+                    className="text-[10px] text-muted-foreground hover:text-foreground underline font-medium"
+                  >
+                    Re-mask
+                  </button>
+                </div>
+              )}
             </div>
+
             <div className="text-xs font-bold text-foreground">{application.candidateName}</div>
             <div className="text-[11px] text-muted-foreground">{application.candidateHeadline}</div>
-            <div className="text-[11px] text-muted-foreground font-mono pt-0.5">
-              {application.candidateEmailMasked} · {application.candidateLocation}
+
+            <div className="pt-1 space-y-1 text-[11px] border-t border-border/40">
+              <div className="flex items-center justify-between text-muted-foreground font-mono">
+                <span className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground">
+                  <Mail size={11} /> Email:
+                </span>
+                <span className={isPiiUnmasked ? 'font-semibold text-foreground' : 'text-muted-foreground'}>
+                  {isPiiUnmasked
+                    ? `${application.candidateName.toLowerCase().replace(/[^a-z0-9]+/g, '.')}@candidate.example.com`
+                    : application.candidateEmailMasked}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-muted-foreground font-mono">
+                <span className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground">
+                  <Phone size={11} /> Phone:
+                </span>
+                <span className={isPiiUnmasked ? 'font-semibold text-foreground' : 'text-muted-foreground'}>
+                  {isPiiUnmasked ? '+91 98765 43210' : '+91 98765 *****'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground">
+                  <MapPin size={11} /> Location:
+                </span>
+                <span>{application.candidateLocation}</span>
+              </div>
             </div>
           </div>
 
@@ -380,6 +700,309 @@ export function ApplicationDetailPage() {
                 <div className="flex items-center justify-between text-[10px] text-muted-foreground mt-1">
                   <span>Actor: {event.actor}</span>
                   <span className="font-mono">{event.timestamp}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ======================= MODALS ======================= */}
+
+      {/* A. Withdraw Confirmation Modal (APP-2) */}
+      {isWithdrawModalOpen && (
+        <Modal
+          isOpen={true}
+          onClose={() => setIsWithdrawModalOpen(false)}
+          title="Withdraw Application"
+          subtitle={`Candidate: ${application.candidateName} · Role: ${application.jobTitle}`}
+        >
+          <div className="space-y-4 text-xs">
+            <div className="rounded-xl border border-rose-200 bg-rose-50/70 p-3.5 text-rose-900 flex items-start gap-2.5">
+              <AlertCircle size={16} className="text-rose-600 shrink-0 mt-0.5" />
+              <div>
+                <strong className="block font-semibold">Dispute Casework Action:</strong>
+                Are you sure you want to withdraw this application? This will set the application status to <strong>Withdrawn</strong> and log an administrative timeline record.
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 border-t border-border pt-4">
+              <button
+                onClick={() => setIsWithdrawModalOpen(false)}
+                className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmWithdraw}
+                className="rounded-lg bg-rose-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-rose-700"
+              >
+                Confirm Withdrawal
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* B. Re-send Notification Modal (APP-2) */}
+      {isResendModalOpen && (
+        <Modal
+          isOpen={true}
+          onClose={() => setIsResendModalOpen(false)}
+          title="Re-send Application Notification"
+          subtitle={`Candidate: ${application.candidateName} (${application.candidateEmailMasked})`}
+        >
+          <div className="space-y-4 text-xs">
+            <div className="rounded-xl border border-primary/20 bg-primary/10 p-3.5 text-foreground flex items-start gap-2.5">
+              <Send size={16} className="text-primary shrink-0 mt-0.5" />
+              <div>
+                <strong className="block font-semibold text-primary">Notification Re-dispatch:</strong>
+                This action simulates re-sending the candidate application status email and portal push notice for stage: <strong>{currentStage}</strong>.
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 border-t border-border pt-4">
+              <button
+                onClick={() => setIsResendModalOpen(false)}
+                className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmResendNotification}
+                className="rounded-lg bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                Re-send Notification
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* C. Correct Step X of Y Modal (APP-5) */}
+      {isEditStepModalOpen && (
+        <Modal
+          isOpen={true}
+          onClose={() => setIsEditStepModalOpen(false)}
+          title="Correct Hiring Pipeline Step"
+          subtitle="Admin dispute correction for overall recruitment workflow progress."
+        >
+          <div className="space-y-4 text-xs">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-semibold text-foreground">Current Step (X)</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={tempStep}
+                  onChange={(e) => {
+                    setTempStep(Number(e.target.value));
+                    setStepError(null);
+                  }}
+                  className="mt-1 w-full rounded-lg border border-border bg-background p-2 text-xs"
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-foreground">Total Steps (Y)</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={tempTotalSteps}
+                  onChange={(e) => {
+                    setTempTotalSteps(Number(e.target.value));
+                    setStepError(null);
+                  }}
+                  className="mt-1 w-full rounded-lg border border-border bg-background p-2 text-xs"
+                />
+              </div>
+            </div>
+
+            {stepError && (
+              <div className="text-rose-600 text-xs font-semibold flex items-center gap-1.5">
+                <AlertCircle size={13} />
+                <span>{stepError}</span>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2 border-t border-border pt-4">
+              <button
+                onClick={() => setIsEditStepModalOpen(false)}
+                className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveStep}
+                className="rounded-lg bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                Save Step Correction
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* D. Correct Round X of Y Modal (APP-5) */}
+      {isEditRoundModalOpen && (
+        <Modal
+          isOpen={true}
+          onClose={() => setIsEditRoundModalOpen(false)}
+          title="Correct Interview Round"
+          subtitle="Admin dispute correction for interview panel rounds."
+        >
+          <div className="space-y-4 text-xs">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-semibold text-foreground">Current Round (X)</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={tempRound}
+                  onChange={(e) => {
+                    setTempRound(Number(e.target.value));
+                    setRoundError(null);
+                  }}
+                  className="mt-1 w-full rounded-lg border border-border bg-background p-2 text-xs"
+                />
+              </div>
+              <div>
+                <label className="font-semibold text-foreground">Total Rounds (Y)</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={tempTotalRounds}
+                  onChange={(e) => {
+                    setTempTotalRounds(Number(e.target.value));
+                    setRoundError(null);
+                  }}
+                  className="mt-1 w-full rounded-lg border border-border bg-background p-2 text-xs"
+                />
+              </div>
+            </div>
+
+            {roundError && (
+              <div className="text-rose-600 text-xs font-semibold flex items-center gap-1.5">
+                <AlertCircle size={13} />
+                <span>{roundError}</span>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2 border-t border-border pt-4">
+              <button
+                onClick={() => setIsEditRoundModalOpen(false)}
+                className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveRound}
+                className="rounded-lg bg-emerald-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
+              >
+                Save Round Correction
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+      {/* E. PII Unmask Justification Modal (APP-10 / DPDP Act Compliance) */}
+      {unmaskModalOpen && (
+        <Modal
+          isOpen={unmaskModalOpen}
+          onClose={() => {
+            setUnmaskModalOpen(false);
+            setUnmaskError('');
+            setUnmaskJustification('');
+          }}
+          title="Authorized PII Unmask Request"
+          subtitle="Candidate contact information is protected under DPDP Act 2023."
+          maxWidth="max-w-[480px]"
+          dataTestId="modal-unmask-pii"
+          footer={
+            <div className="flex items-center justify-end gap-2 w-full">
+              <button
+                type="button"
+                onClick={() => {
+                  setUnmaskModalOpen(false);
+                  setUnmaskError('');
+                  setUnmaskJustification('');
+                }}
+                className="rounded-xl border border-border px-4 py-2 text-[11px] font-bold text-muted-foreground hover:bg-muted transition-colors"
+              >
+                Cancel (Keep Masked)
+              </button>
+              <button
+                type="button"
+                data-testid="button-confirm-unmask"
+                onClick={handleConfirmUnmask}
+                disabled={!unmaskJustification.trim() || unmaskJustification.trim().length < 5}
+                className="rounded-xl bg-primary px-4 py-2 text-[11px] font-bold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                Authorize & Unmask
+              </button>
+            </div>
+          }
+        >
+          <div className="space-y-3.5 py-1 text-xs">
+            <div className="rounded-xl bg-amber-50 border border-amber-200 p-3 text-amber-900 leading-relaxed text-[11px] space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-amber-800">
+                <ShieldAlert size={14} /> Statutory DPDP Compliance Notice
+              </div>
+              <p>
+                Unmasking personal email and phone numbers creates an immutable audit event. You must provide a valid casework or operational justification.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-foreground mb-1">
+                Business Justification <span className="text-rose-500">*</span>
+              </label>
+              <textarea
+                data-testid="input-unmask-justification"
+                rows={3}
+                value={unmaskJustification}
+                onChange={(e) => {
+                  setUnmaskJustification(e.target.value);
+                  if (unmaskError) setUnmaskError('');
+                }}
+                placeholder="State specific dispute, employer interview escalation, or fraud inquiry reason (minimum 5 characters)..."
+                className="w-full rounded-xl border border-border bg-card p-2.5 text-xs outline-none focus:border-primary leading-relaxed"
+              />
+              <div className="flex items-center justify-between text-[10px] text-muted-foreground mt-1">
+                <span>Actor: Operations Admin (Anita Chanchlani)</span>
+                <span>{unmaskJustification.trim().length}/5 min characters</span>
+              </div>
+              {unmaskError && (
+                <p className="text-[11px] font-semibold text-rose-600 mt-1">{unmaskError}</p>
+              )}
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* PII Audit Trail Stream (Visible when unmask events exist) */}
+      {piiAuditLogs.length > 0 && (
+        <section className="rounded-2xl border border-border bg-card p-5 space-y-3 shadow-sm animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={16} className="text-emerald-600" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Candidate PII Access Audit Log ({piiAuditLogs.length})
+            </h3>
+          </div>
+          <div className="space-y-2">
+            {piiAuditLogs.map((log) => (
+              <div
+                key={log.id}
+                className="rounded-xl border border-border/70 bg-muted/20 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+              >
+                <div>
+                  <div className="font-bold text-foreground">{log.action}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">
+                    Reason: <span className="italic text-foreground">"{log.reason}"</span>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="text-[10px] font-semibold text-foreground">{log.actor}</div>
+                  <div className="text-[10px] text-muted-foreground font-mono">{log.timestamp}</div>
                 </div>
               </div>
             ))}

@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <header className="navbar" id="navbar">
@@ -34,8 +35,8 @@ export default function Navbar() {
 
         {/* Right actions */}
         <div className="navbar__actions" id="navbar-actions">
-          <button className="navbar__login" id="login-btn" onClick={() => window.location.href = '/admin/login'}>Log in</button>
-          <button className="navbar__signup" id="signup-btn" onClick={() => window.location.href = '/signup'}>Sign up</button>
+          <Link to="/login" className="navbar__login" id="login-btn" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>Log in</Link>
+          <Link to="/signup" className="navbar__signup" id="signup-btn" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>Sign up</Link>
         </div>
 
         {/* Mobile hamburger */}

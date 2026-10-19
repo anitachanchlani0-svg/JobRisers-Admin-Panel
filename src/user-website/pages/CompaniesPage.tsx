@@ -251,12 +251,17 @@ export default function CompaniesPage() {
           </nav>
 
           {/* Logged-in User: AJ and Alex Johnson */}
-          <div className="companies-nav__user" id="companies-user-profile">
+          <Link
+            to="/settings"
+            className="companies-nav__user"
+            id="companies-user-profile"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
             <div className="companies-nav__avatar" aria-hidden="true">
               AJ
             </div>
             <span className="companies-nav__username">Alex Johnson</span>
-          </div>
+          </Link>
         </div>
       </header>
 

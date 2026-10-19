@@ -267,12 +267,17 @@ export default function JobsPage() {
           </nav>
 
           {/* Logged in User: AJ and Alex Johnson */}
-          <div className="jobs-nav__user" id="jobs-user-profile">
+          <Link
+            to="/settings"
+            className="jobs-nav__user"
+            id="jobs-user-profile"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
             <div className="jobs-nav__avatar" aria-hidden="true">
               AJ
             </div>
             <span className="jobs-nav__username">Alex Johnson</span>
-          </div>
+          </Link>
         </div>
       </header>
 

@@ -247,7 +247,12 @@ export default function InterviewsPage() {
             </nav>
 
             {/* User Dropdown */}
-            <div className="interviews-nav__user-dropdown" id="nav-user-dropdown">
+            <Link
+              to="/settings"
+              className="interviews-nav__user-dropdown"
+              id="nav-user-dropdown"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
               <span className="interviews-nav__username">Alex Johnson</span>
               <svg
                 className="interviews-nav__user-chevron"
@@ -262,7 +267,7 @@ export default function InterviewsPage() {
               >
                 <polyline points="6 9 12 15 18 9" />
               </svg>
-            </div>
+            </Link>
           </div>
         </div>
       </header>
@@ -280,7 +285,7 @@ export default function InterviewsPage() {
               <button
                 type="button"
                 className="interviews-menu__item"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/dashboard')}
                 id="menu-home"
               >
                 <svg className="interviews-menu__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -349,7 +354,7 @@ export default function InterviewsPage() {
               <button
                 type="button"
                 className="interviews-menu__item"
-                onClick={() => navigate('/#messages')}
+                onClick={() => navigate('/messages')}
                 id="menu-messages"
               >
                 <svg className="interviews-menu__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

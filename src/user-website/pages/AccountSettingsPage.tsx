@@ -99,12 +99,17 @@ export default function AccountSettingsPage() {
               <div className="settings-nav__notif-dot" aria-label="New notification" />
 
               {/* Logged in User */}
-              <div className="settings-nav__user" id="user-profile-badge">
+              <Link
+                to="/settings"
+                className="settings-nav__user"
+                id="user-profile-badge"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
                 <div className="settings-nav__avatar" aria-hidden="true">
                   AJ
                 </div>
                 <span className="settings-nav__username">Alex Johnson</span>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -163,7 +168,7 @@ export default function AccountSettingsPage() {
               <button
                 type="button"
                 className="settings-menu__item settings-menu__item--has-badge"
-                onClick={() => navigate('/#messages')}
+                onClick={() => navigate('/messages')}
               >
                 <span>Messages</span>
                 <span className="settings-menu__badge">3</span>
