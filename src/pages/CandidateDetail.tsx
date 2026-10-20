@@ -62,6 +62,7 @@ import {
   type CandidateResumeVersion,
 } from '@/mock-data';
 import { Avatar, StatusPill, Modal } from '@/components/ui';
+import { fetchCandidateById, unmaskCandidatePii, updateCandidateStatus, addCandidateNote } from '@/lib/api';
 
 type CandidateSubTab =
   | 'overview'
@@ -78,6 +79,31 @@ export function CandidateDetailPage() {
 
   const [candidatesList, setCandidatesList] = useState<AdminCandidate[]>(adminCandidates);
   const [activeTab, setActiveTab] = useState<CandidateSubTab>('overview');
+
+  useEffect(() => {
+    if (!id) return;
+    let isMounted = true;
+    fetchCandidateById(id)
+      .then((data) => {
+        if (isMounted && data) {
+          setCandidatesList((prev) => {
+            const index = prev.findIndex((c) => c.id === id || (c as any).customId === id);
+            if (index >= 0) {
+              const updated = [...prev];
+              updated[index] = { ...updated[index], ...data };
+              return updated;
+            }
+            return [data, ...prev];
+          });
+        }
+      })
+      .catch((err) => {
+        console.warn('Backend candidate detail notice:', err);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
 
   // Candidate Unmasked PII Tracking
   const [unmaskedCandidateIds, setUnmaskedCandidateIds] = useState<Set<string>>(new Set());
@@ -220,6 +246,28 @@ export function CandidateDetailPage() {
       timestamp: `Today, ${timestamp}`,
       actor: 'Admin: Rahul Sharma (Super Admin)',
     };
+
+    unmaskCandidatePii(candidate.id, trimmed)
+      .then((res) => {
+        if (res && res.unmasked) {
+          setCandidatesList((prev) =>
+            prev.map((c) =>
+              c.id === candidate.id
+                ? {
+                    ...c,
+                    emailFull: res.unmasked.email,
+                    phoneFull: res.unmasked.phone,
+                    isUnmasked: true,
+                    auditLog: [newAuditEntry, ...(c.auditLog || [])],
+                  }
+                : c
+            )
+          );
+        }
+      })
+      .catch((err) => {
+        console.warn('Backend unmask notice:', err);
+      });
 
     setUnmaskedCandidateIds((prev) => new Set(prev).add(candidate.id));
     setCandidatesList((prev) =>

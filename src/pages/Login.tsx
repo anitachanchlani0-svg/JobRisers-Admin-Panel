@@ -17,6 +17,17 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { Modal } from '@/components/ui';
+import { API_BASE_URL, setAuthSession } from '@/lib/api';
+
+const ROLE_MAP: Record<string, string> = {
+  'super-admin': 'Super Admin',
+  'operations-admin': 'Operations Admin',
+  'moderator': 'Moderator',
+  'content-manager': 'Content Manager',
+  'support-agent': 'Support Agent',
+  'finance': 'Finance',
+  'analyst': 'Analyst',
+};
 
 interface LoginPageProps {
   onLoginSuccess?: (email: string, roleName: string) => void;
@@ -33,16 +44,18 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
     setErrorMessage(null);
 
     // Validation
-    if (!email.trim()) {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
       setErrorMessage('Please enter your administrative corporate email.');
       return;
     }
-    if (!email.includes('@') || !email.includes('.')) {
+    if (!trimmedEmail.includes('@') || !trimmedEmail.includes('.')) {
       setErrorMessage('Please enter a valid work email address (e.g. name@jobrisers.com).');
       return;
     }
@@ -53,29 +66,56 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
     setIsLoading(true);
 
-    // Simulated authenticating state
-    setTimeout(() => {
-      setIsLoading(false);
-      // Valid mock credentials check
-      const lower = email.toLowerCase().trim();
-      let matchedRole = 'Operations Admin';
-      if (lower.includes('sourabh') || lower.includes('super')) {
-        matchedRole = 'Super Admin';
-      } else if (lower.includes('support')) {
-        matchedRole = 'Support Agent';
-      } else if (lower.includes('analyst')) {
-        matchedRole = 'Analyst';
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: trimmedEmail,
+          password: password,
+        }),
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          setErrorMessage(data?.message || 'Invalid administrative credentials. Please check your email and password.');
+        } else if (response.status === 403) {
+          setErrorMessage(data?.message || 'Administrative account is inactive. Please contact platform governance.');
+        } else {
+          setErrorMessage(data?.message || `Authentication failed (Status ${response.status}). Please try again.`);
+        }
+        return;
       }
 
-      localStorage.setItem('jobrisers_admin_auth', 'true');
-      localStorage.setItem('jobrisers_admin_email', email);
-      localStorage.setItem('jobrisers_admin_role', matchedRole);
+      if (!data || !data.token || !data.admin) {
+        setErrorMessage('Authentication response was incomplete. Please try again.');
+        return;
+      }
+
+      const backendRole = data.admin.role;
+      const humanReadableRole = ROLE_MAP[backendRole] || backendRole;
+
+      setAuthSession(data.token, {
+        id: data.admin.id,
+        name: data.admin.name,
+        email: data.admin.email,
+        role: humanReadableRole,
+      });
 
       if (onLoginSuccess) {
-        onLoginSuccess(email, matchedRole);
+        onLoginSuccess(data.admin.email, humanReadableRole);
       }
       navigate('/admin/dashboard');
-    }, 600);
+    } catch (err) {
+      console.error('Login network error:', err);
+      setErrorMessage('Unable to connect to the authentication server. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleQuickFill = (demoEmail: string, _roleTitle: string) => {

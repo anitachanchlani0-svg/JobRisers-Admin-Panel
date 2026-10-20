@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Link, useLocation, useNavigate, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary, Modal } from '@/components/ui';
+import { clearAuthSession, getAuthToken, getCurrentAdmin, setAuthSession } from '@/lib/api';
 import { Overview } from '@/pages/Overview';
 import { DirectoryPage } from '@/pages/Directory';
 import { ModulePage } from '@/pages/Module';
@@ -361,10 +362,62 @@ function Shell() {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [roleToast, setRoleToast] = useState<string | null>(null);
 
-  // Authentication State
-  const [isAdminAuth, setIsAdminAuth] = useState<boolean>(() => {
-    return localStorage.getItem('jobrisers_admin_auth') !== 'false';
+  // Authentication & Session State
+  const [isAdminAuth, setIsAdminAuth] = useState<boolean>(false);
+  const [isAuthChecking, setIsAuthChecking] = useState<boolean>(() => {
+    return !!getAuthToken();
   });
+
+  // Session restoration from verified backend token on mount
+  useEffect(() => {
+    let isMounted = true;
+
+    async function restoreAdminSession() {
+      const token = getAuthToken();
+      if (!token) {
+        setIsAdminAuth(false);
+        setIsAuthChecking(false);
+        return;
+      }
+
+      try {
+        const data = await getCurrentAdmin();
+        if (!isMounted) return;
+
+        if (data && data.success && data.admin) {
+          setIsAdminAuth(true);
+          const roleKey = data.admin.role;
+          const match = ADMIN_ROLES.find((r) => r.id === roleKey || r.name === roleKey);
+          if (match) {
+            setActiveRole(match);
+          }
+          setAuthSession(token, {
+            id: data.admin.id,
+            name: data.admin.name,
+            email: data.admin.email,
+            role: match ? match.name : roleKey,
+          });
+        } else {
+          clearAuthSession();
+          setIsAdminAuth(false);
+        }
+      } catch {
+        if (!isMounted) return;
+        clearAuthSession();
+        setIsAdminAuth(false);
+      } finally {
+        if (isMounted) {
+          setIsAuthChecking(false);
+        }
+      }
+    }
+
+    restoreAdminSession();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // AUTH-7: Safe Read-Only "View as User" State
   const [viewingUser, setViewingUser] = useState<{
@@ -706,12 +759,28 @@ function Shell() {
       .filter((group) => group.links.length > 0);
   }, [activeRole.name]);
 
+  // Loading state while verifying backend session
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background text-muted-foreground text-xs font-medium">
+        <div className="flex items-center gap-2.5">
+          <div className="h-4 w-4 rounded-full border-2 border-primary/30 border-t-primary animate-spin" />
+          <span>Verifying administrative session...</span>
+        </div>
+      </div>
+    );
+  }
+
   // Dedicated Clean Admin Login Page View (without dashboard shell)
   if (location.pathname === '/admin-login') {
     return (
       <LoginPage
         onLoginSuccess={(email, role) => {
           setIsAdminAuth(true);
+          const match = ADMIN_ROLES.find((r) => r.name === role || r.id === role);
+          if (match) {
+            setActiveRole(match);
+          }
           setRoleToast(`Signed in as ${role} (${email}).`);
         }}
       />
@@ -1060,7 +1129,7 @@ function Shell() {
                     type="button"
                     data-testid="btn-admin-logout"
                     onClick={() => {
-                      localStorage.setItem('jobrisers_admin_auth', 'false');
+                      clearAuthSession();
                       setIsAdminAuth(false);
                       setIsProfileMenuOpen(false);
                       navigate('/admin-login');

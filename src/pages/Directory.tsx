@@ -42,6 +42,7 @@ import {
   UploadCloud,
   FileSpreadsheet,
 } from 'lucide-react';
+import { fetchCandidates } from '@/lib/api';
 import {
   adminCandidates,
   adminEmployers,
@@ -93,6 +94,23 @@ export function DirectoryPage({ kind, title, eyebrow, description }: DirectoryPa
   useEffect(() => {
     setSelected(directorySections[kind][0]);
     setStatus('All statuses');
+  }, [kind]);
+
+  useEffect(() => {
+    if (kind !== 'candidates') return;
+    let isMounted = true;
+    fetchCandidates()
+      .then((res) => {
+        if (isMounted && res && res.data && res.data.length > 0) {
+          setCandidates(res.data as any);
+        }
+      })
+      .catch((err) => {
+        console.warn('Backend candidates fetch notice:', err);
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [kind]);
 
   const activeSection = sections.includes(selected) ? selected : sections[0];
