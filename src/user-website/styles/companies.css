@@ -1,0 +1,805 @@
+/* ==========================================================================
+   JobRisers User Website — Companies Listing Page Stylesheet (Screen 5)
+   Exact match with reference screenshot
+   ========================================================================== */
+
+.companies-page-root {
+  min-height: 100vh;
+  background-color: #f4f6fb;
+  color: #111827;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   1. Header / Navigation Bar
+   -------------------------------------------------------------------------- */
+.companies-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid #edf0f5;
+  height: 68px;
+  display: flex;
+  align-items: center;
+}
+
+.companies-nav__container {
+  max-width: 1340px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.companies-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.companies-nav__logo-img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.companies-nav__logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  display: flex;
+}
+
+.companies-nav__logo-text--job {
+  color: #0f172a;
+}
+
+.companies-nav__logo-text--risers {
+  color: #3b82f6;
+}
+
+.companies-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 100%;
+}
+
+.companies-nav__link {
+  position: relative;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.companies-nav__link:hover {
+  color: #111827;
+}
+
+.companies-nav__link--active {
+  color: #111827;
+  font-weight: 600;
+}
+
+.companies-nav__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #4f46e5;
+  border-radius: 2px 2px 0 0;
+}
+
+.companies-nav__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.companies-nav__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.02em;
+}
+
+.companies-nav__username {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* --------------------------------------------------------------------------
+   2. Companies Hero Section
+   -------------------------------------------------------------------------- */
+.companies-hero {
+  background: linear-gradient(180deg, #edf0ff 0%, #e6e9fc 100%);
+  border-bottom: 1px solid #dcdff8;
+  padding: 30px 0 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.companies-hero__inner {
+  max-width: 1340px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  position: relative;
+}
+
+.companies-hero__left {
+  max-width: 710px;
+  width: 100%;
+  z-index: 2;
+}
+
+.companies-hero__eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #4f46e5;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+
+.companies-hero__title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.companies-hero__highlight {
+  color: #4f46e5;
+}
+
+.companies-hero__subtitle {
+  font-size: 13.5px;
+  color: #64748b;
+  margin: 0 0 22px;
+  font-weight: 400;
+}
+
+/* Horizontal Search Bar */
+.companies-search-bar {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 6px 6px 6px 16px;
+  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e0e7ff;
+}
+
+.companies-search-bar__field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.companies-search-bar__field--main {
+  flex: 1.5;
+}
+
+.companies-search-bar__field--loc {
+  flex: 1;
+}
+
+.companies-search-bar__icon {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.companies-search-bar__input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 13px;
+  color: #1e293b;
+  background: transparent;
+  padding: 8px 0;
+}
+
+.companies-search-bar__input::placeholder {
+  color: #94a3b8;
+}
+
+.companies-search-bar__divider {
+  width: 1px;
+  height: 24px;
+  background-color: #e2e8f0;
+  margin: 0 14px;
+  flex-shrink: 0;
+}
+
+.companies-search-bar__btn {
+  background: #4f46e5;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 24px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.1s ease;
+  flex-shrink: 0;
+}
+
+.companies-search-bar__btn:hover {
+  background: #4338ca;
+}
+
+.companies-search-bar__btn:active {
+  transform: scale(0.98);
+}
+
+/* Right Vector Artwork */
+.companies-hero__artwork {
+  width: 540px;
+  height: 195px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.companies-hero-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* --------------------------------------------------------------------------
+   3. Main Layout: Left Filters Sidebar & Right Results Grid
+   -------------------------------------------------------------------------- */
+.companies-main {
+  flex: 1;
+  background-color: #f4f6fb;
+  padding: 24px 0 60px;
+}
+
+.companies-main__container {
+  max-width: 1340px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT COLUMN — FILTERS SIDEBAR
+   -------------------------------------------------------------------------- */
+.companies-filter-sidebar {
+  width: 100%;
+}
+
+.companies-filter-card {
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.companies-filter-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 2px;
+}
+
+.companies-filter-card__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.companies-filter-card__clear-btn {
+  background: none;
+  border: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4f46e5;
+  cursor: pointer;
+  padding: 0;
+}
+
+.companies-filter-card__clear-btn:hover {
+  text-decoration: underline;
+}
+
+.companies-filter-group {
+  margin-bottom: 14px;
+}
+
+.companies-filter-group__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 10px;
+}
+
+.companies-filter-group__list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.companies-filter-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #374151;
+  cursor: pointer;
+  user-select: none;
+}
+
+.companies-checkbox-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.companies-checkbox-wrap input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.companies-checkbox-custom {
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  color: #ffffff;
+}
+
+.companies-checkbox-wrap input:checked + .companies-checkbox-custom {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.companies-filter-item__label {
+  flex: 1;
+}
+
+.companies-filter-show-more {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 0 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.companies-filter-show-more:hover {
+  text-decoration: underline;
+}
+
+.companies-filter-more-items {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 9px;
+}
+
+.companies-filter-divider {
+  height: 1px;
+  background-color: #f1f5f9;
+  margin: 14px 0;
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT COLUMN — RESULTS HEADER & FOUR-COLUMN GRID
+   -------------------------------------------------------------------------- */
+.companies-results-section {
+  width: 100%;
+}
+
+.companies-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+
+.companies-results-count {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.companies-sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.companies-sort-label {
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+.companies-sort-dropdown {
+  position: relative;
+}
+
+.companies-sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.companies-sort-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.companies-sort-arrow {
+  font-size: 8px;
+  color: #64748b;
+  margin-left: 2px;
+}
+
+.companies-sort-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 140px;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.companies-sort-menu-item {
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 12.5px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.companies-sort-menu-item:hover {
+  background: #f1f5f9;
+}
+
+.companies-sort-menu-item--active {
+  color: #4f46e5;
+  font-weight: 600;
+  background: #eef2ff;
+}
+
+/* 4-Column Company Cards Grid */
+.companies-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.company-card {
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  border-radius: 12px;
+  padding: 18px 16px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.15s ease;
+}
+
+.company-card:hover {
+  border-color: #c7d2fe;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.06);
+  transform: translateY(-2px);
+}
+
+.company-card__header {
+  margin-bottom: 12px;
+}
+
+.company-card__logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.company-card__logo--google {
+  background: #fee2e2;
+  color: #ea4335;
+}
+
+.company-card__logo--microsoft {
+  background: #f0f9ff;
+}
+
+.company-card__logo--amazon {
+  background: #fefce8;
+  color: #d97706;
+  font-size: 22px;
+  font-family: sans-serif;
+}
+
+.company-card__logo--adobe {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.company-card__logo--spotify {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.company-card__logo--deloitte {
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 19px;
+  font-family: Georgia, serif;
+}
+
+.company-card__logo-deloitte-dot {
+  color: #86efac;
+}
+
+.company-card__logo--flipkart {
+  background: #facc15;
+  color: #0284c7;
+  font-size: 18px;
+  font-weight: 900;
+  font-style: italic;
+}
+
+.company-card__logo--infosys {
+  background: #e0f2fe;
+}
+
+.company-card__logo-infosys {
+  color: #0284c7;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.company-card__name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 2px;
+  line-height: 1.3;
+}
+
+.company-card__tagline {
+  font-size: 11.5px;
+  color: #64748b;
+  margin: 0 0 12px;
+  line-height: 1.3;
+  min-height: 16px;
+}
+
+.company-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.company-card__meta-item {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.company-card__btn {
+  background: #f0edff;
+  color: #4f46e5;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.company-card__btn:hover {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Pagination
+   -------------------------------------------------------------------------- */
+.companies-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+}
+
+.companies-pagination__arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.companies-pagination__arrow:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.companies-pagination__page {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 12.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.companies-pagination__page:hover {
+  background: #f1f5f9;
+}
+
+.companies-pagination__page--active {
+  background: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.companies-pagination__page--active:hover {
+  background: #4338ca;
+}
+
+.companies-pagination__ellipsis {
+  color: #94a3b8;
+  font-size: 12px;
+  padding: 0 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Design
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .companies-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .companies-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .companies-main__container {
+    grid-template-columns: 200px 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .companies-nav__links {
+    display: none;
+  }
+
+  .companies-hero__inner {
+    flex-direction: column;
+  }
+
+  .companies-hero__artwork {
+    display: none;
+  }
+
+  .companies-search-bar {
+    flex-direction: column;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .companies-search-bar__divider {
+    display: none;
+  }
+
+  .companies-search-bar__btn {
+    width: 100%;
+  }
+
+  .companies-main__container {
+    grid-template-columns: 1fr;
+  }
+
+  .companies-filter-sidebar {
+    display: none;
+  }
+
+  .companies-grid {
+    grid-template-columns: 1fr;
+  }
+}

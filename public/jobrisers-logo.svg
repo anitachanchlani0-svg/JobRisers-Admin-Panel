@@ -1,0 +1,16 @@
+<svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Dark Circle -->
+  <circle cx="50" cy="50" r="48" fill="#111827" stroke="#374151" stroke-width="2"/>
+  
+  <!-- Inner Blue Circle -->
+  <circle cx="50" cy="50" r="28" fill="#2563eb" stroke="#3b82f6" stroke-width="2"/>
+  
+  <!-- Letter J in center -->
+  <text x="50" y="60" text-anchor="middle" font-family="'Inter', -apple-system, sans-serif" font-weight="900" font-size="32" fill="#111827">J</text>
+
+  <!-- Circular Text Path -->
+  <path id="textPath" d="M 18,50 A 32,32 0 0,0 82,50" fill="none" />
+  <text fill="#ffffff" font-family="'Inter', -apple-system, sans-serif" font-size="9.5" font-weight="800" letter-spacing="3.5">
+    <textPath href="#textPath" startOffset="50%" text-anchor="middle">JOBRISERS</textPath>
+  </text>
+</svg>

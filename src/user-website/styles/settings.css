@@ -1,0 +1,892 @@
+/* ==========================================================================
+   JobRisers User Website — Account Settings Page Stylesheet (Screen 4)
+   Exact match with reference screenshot
+   ========================================================================== */
+
+.settings-page-root {
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: #111827;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   Top Navigation Bar
+   -------------------------------------------------------------------------- */
+.settings-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid #edf0f5;
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+.settings-nav__container {
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.settings-nav__left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.settings-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.settings-nav__logo-img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.settings-nav__logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  display: flex;
+}
+
+.settings-nav__logo-text--job {
+  color: #0f172a;
+}
+
+.settings-nav__logo-text--risers {
+  color: #3b82f6;
+}
+
+.settings-nav__search {
+  width: 340px;
+}
+
+.settings-nav__search-input {
+  width: 100%;
+  height: 36px;
+  background: #f1f3f7;
+  border: none;
+  border-radius: 8px;
+  padding: 0 14px;
+  font-size: 13px;
+  color: #1e293b;
+  outline: none;
+  transition: background 0.15s ease;
+}
+
+.settings-nav__search-input::placeholder {
+  color: #9ca3af;
+}
+
+.settings-nav__search-input:focus {
+  background: #e9ecf2;
+}
+
+.settings-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.settings-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.settings-nav__link {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.settings-nav__link:hover {
+  color: #111827;
+}
+
+.settings-nav__user-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.settings-nav__notif-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  position: relative;
+  top: -8px;
+}
+
+.settings-nav__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.settings-nav__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.02em;
+}
+
+.settings-nav__username {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* --------------------------------------------------------------------------
+   Main Page Body Layout (Three Columns)
+   -------------------------------------------------------------------------- */
+.settings-body {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 24px 0 60px;
+}
+
+.settings-body__container {
+  max-width: 1360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 190px 1fr 275px;
+  gap: 28px;
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT COLUMN — SIDEBAR NAVIGATION
+   -------------------------------------------------------------------------- */
+.settings-sidebar-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: calc(100vh - 120px);
+}
+
+.settings-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-menu__item {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #4b5563;
+  padding: 9px 12px;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.settings-menu__item:hover {
+  background: #f8fafc;
+  color: #111827;
+}
+
+.settings-menu__item--active {
+  background: #f0edff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.settings-menu__item--active:hover {
+  background: #ebe6ff;
+  color: #4f46e5;
+}
+
+.settings-menu__item--has-badge {
+  justify-content: space-between;
+}
+
+.settings-menu__badge {
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Upgrade to Premium Card at Bottom of Left Sidebar */
+.settings-upgrade-card {
+  background: #f8faff;
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 36px;
+}
+
+.settings-upgrade-card__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4338ca;
+  margin: 0 0 6px;
+}
+
+.settings-upgrade-card__desc {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+
+.settings-upgrade-card__btn {
+  background: #ffffff;
+  border: 1.5px solid #4f46e5;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 0;
+  border-radius: 7px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.settings-upgrade-card__btn:hover {
+  background: #f5f3ff;
+}
+
+/* --------------------------------------------------------------------------
+   MIDDLE COLUMN — MAIN CONTENT
+   -------------------------------------------------------------------------- */
+.settings-main-content {
+  width: 100%;
+}
+
+.settings-header {
+  margin-bottom: 18px;
+}
+
+.settings-header__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+  margin: 0 0 4px;
+  line-height: 1.25;
+}
+
+.settings-header__subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Tabs */
+.settings-tabs {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  border-bottom: 1px solid #edf0f5;
+  margin-bottom: 22px;
+}
+
+.settings-tab {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  padding: 0 0 10px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s ease;
+}
+
+.settings-tab:hover {
+  color: #111827;
+}
+
+.settings-tab--active {
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.settings-tab--active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #4f46e5;
+}
+
+/* Cards Stack */
+.settings-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.settings-card {
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.settings-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.settings-card__title-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.settings-card__icon-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #f0f4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-card__title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 3px;
+}
+
+.settings-card__subtitle {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+.settings-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.settings-badge--verified {
+  background: #e6f9ed;
+  color: #15803d;
+}
+
+.settings-badge--active {
+  background: #e6f9ed;
+  color: #15803d;
+}
+
+/* Form Fields */
+.settings-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-field--inline {
+  max-width: 440px;
+}
+
+.settings-field__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.settings-field__input {
+  height: 38px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #1f2937;
+  outline: none;
+  background: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.settings-field__input::placeholder {
+  color: #9ca3af;
+}
+
+.settings-field__input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.settings-field__input--email {
+  width: 100%;
+}
+
+.settings-card__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.settings-card__feedback-msg {
+  font-size: 12px;
+  font-weight: 500;
+  color: #16a34a;
+}
+
+.settings-btn {
+  border: none;
+  border-radius: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.settings-btn--primary {
+  background: #4f46e5;
+  color: #ffffff;
+  padding: 8px 18px;
+}
+
+.settings-btn--primary:hover {
+  background: #4338ca;
+}
+
+.settings-btn--primary:active {
+  transform: scale(0.98);
+}
+
+/* Password Layout */
+.settings-password-grid {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 20px;
+  align-items: start;
+}
+
+.settings-password-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.settings-password-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.settings-req-panel {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.settings-req-panel__title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px;
+}
+
+.settings-req-panel__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-req-panel__list li {
+  font-size: 10.5px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* Notification Preferences List */
+.settings-notif-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-notif-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 16px;
+}
+
+.settings-notif-row:last-child {
+  border-bottom: none;
+  padding-bottom: 4px;
+}
+
+.settings-toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 9999px;
+  background: #cbd5e1;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.settings-toggle__handle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: block;
+  transition: transform 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.settings-toggle--on {
+  background: #4f46e5;
+}
+
+.settings-toggle--on .settings-toggle__handle {
+  transform: translateX(16px);
+}
+
+.settings-notif-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.settings-notif-desc {
+  font-size: 11.5px;
+  color: #64748b;
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT COLUMN — SIDEBAR WIDGETS
+   -------------------------------------------------------------------------- */
+.settings-sidebar-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Your account Card */
+.settings-right-card {
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.settings-right-card__header-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 12px;
+}
+
+.settings-account-user {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.settings-account-user__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-account-user__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-account-user__name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.settings-account-user__email {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.settings-account-user__link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #4f46e5;
+  cursor: pointer;
+  text-align: left;
+}
+
+.settings-account-user__link:hover {
+  text-decoration: underline;
+}
+
+.settings-right-card__divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 12px 0;
+}
+
+.settings-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  margin-bottom: 8px;
+}
+
+.settings-meta-row:last-child {
+  margin-bottom: 0;
+}
+
+.settings-meta-label {
+  color: #64748b;
+}
+
+.settings-meta-value {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Quick Action Cards */
+.settings-action-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.settings-action-card:hover {
+  border-color: #cbd5e1;
+}
+
+.settings-action-card--blue {
+  background: #f0f5ff;
+  border-color: #dbeafe;
+}
+
+.settings-action-card--danger {
+  background: #fef2f2;
+  border-color: #fee2e2;
+}
+
+.settings-action-card__circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-action-card__circle--blue {
+  background: #dbeafe;
+}
+
+.settings-action-card__circle--danger {
+  background: #fee2e2;
+}
+
+.settings-action-card__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-action-card__title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 2px;
+  line-height: 1.3;
+}
+
+.settings-action-card__title--danger {
+  color: #dc2626;
+}
+
+.settings-action-card__desc {
+  font-size: 10.5px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* Need Help Card */
+.settings-help-card {
+  background: #ffffff;
+  border: 1px solid #edf0f5;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.settings-help-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.settings-help-card__icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-help-card__title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.settings-help-card__desc {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
+.settings-help-card__links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-help-card__link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #4f46e5;
+  cursor: pointer;
+  text-align: left;
+}
+
+.settings-help-card__link:hover {
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Design
+   -------------------------------------------------------------------------- */
+@media (max-width: 1160px) {
+  .settings-body__container {
+    grid-template-columns: 180px 1fr;
+  }
+  .settings-sidebar-right {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings-nav__links {
+    display: none;
+  }
+  .settings-nav__search {
+    display: none;
+  }
+  .settings-body__container {
+    grid-template-columns: 1fr;
+  }
+  .settings-sidebar-left {
+    display: none;
+  }
+  .settings-password-grid {
+    grid-template-columns: 1fr;
+  }
+}
