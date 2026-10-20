@@ -21,7 +21,7 @@ import {
   EmployerDetailPage,
   JobDetailPage,
   ApplicationDetailPage,
-  AdminLogin,
+  SupportTicketDetailPage,
   LoginPage,
   TalentNetworkPage,
   SalaryBenchmarkPage,
@@ -1407,16 +1407,6 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
 }
 
 function App() {
-  const location = useLocation();
-
-  if (location.pathname === '/login') {
-    return (
-      <RoutedErrorBoundary>
-        <AdminLogin />
-      </RoutedErrorBoundary>
-    );
-  }
-
   return (
     <RoutedErrorBoundary>
       <Shell />

@@ -11,7 +11,6 @@ export { EmployerDetailPage } from './EmployerDetail';
 export { JobDetailPage } from './JobDetail';
 export { ApplicationDetailPage } from './ApplicationDetail';
 export { SupportTicketDetailPage } from './SupportTicketDetail';
-export { AdminLogin } from './AdminLogin';
 export { LoginPage } from './Login';
 export { TalentNetworkPage } from './TalentNetwork';
 export { SalaryBenchmarkPage } from './SalaryBenchmark';

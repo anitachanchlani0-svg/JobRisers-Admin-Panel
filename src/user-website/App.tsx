@@ -10,6 +10,7 @@ import MessagesPage from './pages/MessagesPage'
 import CandidateDashboardPage from './pages/CandidateDashboardPage'
 import SignInPage from './pages/SignInPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResumeBuilderPage from './pages/ResumeBuilderPage'
 
 export default function App() {
   return (
@@ -20,6 +21,9 @@ export default function App() {
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ForgotPasswordPage />} />
+        <Route path="/resume-builder" element={<ResumeBuilderPage />} />
+        <Route path="/candidate/resume-builder" element={<ResumeBuilderPage />} />
+        <Route path="/resume" element={<ResumeBuilderPage />} />
         <Route path="/dashboard" element={<CandidateDashboardPage />} />
         <Route path="/candidate-dashboard" element={<CandidateDashboardPage />} />
         <Route path="/candidate/dashboard" element={<CandidateDashboardPage />} />
